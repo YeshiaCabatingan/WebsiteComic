@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+    <link rel="stylesheet" href="stylechapter.css">
+</head>
+<style>
+    body {
+            padding-top: 100px;
+            background-color: #0f0e17;
+        }
+
+        .bookmark-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .bookmark-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .bookmark-header h1 {
+            font-size: 32px;
+            color: #ff8906;
+            margin-bottom: 10px;
+        }
+
+        .bookmark-header p {
+            color: #7d82b5;
+            font-size: 16px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #2e2f3e;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-info {
+            padding: 15px;
+        }
+
+        .card-info h3 {
+            font-size: 16px;
+            color: #fffffe;
+            margin-bottom: 5px;
+        }
+
+        .card-info p {
+            font-size: 13px;
+            color: #7d82b5;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #7d82b5;
+            margin-top: 50px;
+            font-size: 16px;
+        }
+</style>
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo-link">
+            <img src="img/image.png" alt="WebComics Logo" class="logo-img">
+            <span class ="logo">Web<span>Comics</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html#home"><img src="img/home.jpg"></a>
+
+            <div class="dropdown" id="navDropdown">
+                <button class="dropdown-btn" id="iconDropdownBtn" type="button">
+                    <img src="img/menu.png" alt="Menu">
+                </button>
+                <div class="dropdown-content" id="iconDropdownContent">
+                    <a href="Bookmark.html#home">Bookmark</a>
+                    <a href="profile1.html#section1">Contact</a>
+                    <a href="register.html">Register</a>
+                </div>
+            </div>
+
+            <a href="index.html#trending">Trending</a>
+            <a href="categories.html">Categories</a>
+            <a href="index.html#about">About</a>
+        </nav>
+        <div class="search-container" id="searchContainer">
+            <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
+            <button class="search-btn" id="searchBtn">
+                <img src="img/search.png" alt="Search">
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+                <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
+                <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
+           <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
+                <a href="mysterious.html" class="dropdown-item">Mysterious</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="bookmark-container">
+        <div class="bookmark-header">
+            <h1>Your Bookmarks</h1>
+            <p>Quick access to your saved comics and web novels</p>
+        </div>
+
+        <div class="cards-grid">
+            <a href="bloodhaven.html" class="card">
+                <img src="img/HavenArk_DevilsBlood.jpg" alt="Haven Ark: Devil's Blood">
+                <div class="card-info">
+                    <h3>Haven Ark: Devil's Blood</h3>
+                    <p>Comic - Chapter 1</p>
+                </div>
+            </a>
+
+            <a href="Forestconnect.html" class="card">
+                <img src="img/Untitled.png" alt="Forest Connect">
+                <div class="card-info">
+                    <h3>Forest Connect</h3>
+                    <p>Web Novel - Chapter 1</p>
+                </div>
+            </a>
+        </div>
+    </main>
+    <script>
+        const searchContainer = document.getElementById('searchContainer');
+        const navDropdown = document.getElementById('navDropdown');
+
+        searchContainer.addEventListener('click', function (e) {
+            searchContainer.classList.toggle('active');
+            navDropdown.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        navDropdown.addEventListener('click', function (e) {
+            navDropdown.classList.toggle('active');
+            searchContainer.classList.remove('active'); 
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', function () {
+            searchContainer.classList.remove('active');
+            navDropdown.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

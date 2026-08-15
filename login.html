@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebComics - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+    <link rel="stylesheet" href="style3-bloodhaven.css">
+    <style>
+        .login-container {
+            max-width: 450px;
+            margin: 120px auto 60px auto;
+            padding: 40px;
+            background-color: #2e2f3e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-container h2 {
+            text-align: center;
+            color: #ff8906;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #fffffe;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #121629;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            color: #fffffe;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #ff8906;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #7d82b5;
+        }
+
+        .form-footer a {
+            color: #ff8906;
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a href="index.html" class="logo-link">
+            <img src="img/image.png" alt="WebComics Logo" class="logo-img">
+            <span class="logo">Web<span>Comics</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html#home"><img src="img/home.jpg" alt="Home"></a>
+
+            <div class="dropdown" id="navDropdown">
+                <button class="dropdown-btn" id="iconDropdownBtn" type="button">
+                    <img src="img/menu.png" alt="Menu">
+                </button>
+                <div class="dropdown-content" id="iconDropdownContent">
+                    <a href="Bookmark.html#home">Bookmark</a>
+                    <a href="profile1.html#section1">Contact</a>
+                    <a href="register.html">Register</a>
+                </div>
+            </div>
+
+            <a href="index.html#trending">Trending</a>
+            <a href="categories.html">Categories</a>
+            <a href="index.html#about">About</a>
+        </nav>
+        <div class="search-container" id="searchContainer">
+            <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
+            <button class="search-btn" id="searchBtn" type="button">
+                <img src="img/search.png" alt="Search">
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+                <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
+                <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
+                <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
+                <a href="mysterious.html" class="dropdown-item">Mysterious</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="login-container">
+        <h2>Welcome Back</h2>
+        <form action="index.html" method="GET">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" placeholder="Enter your username or email" required autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="hero-buttons" style="margin-top: 25px;">
+                <button type="submit" class="btn primary" style="width: 100%; padding: 12px; cursor: pointer; border: none;">Log In</button>
+            </div>
+        </form>
+
+        <div class="form-footer">
+            <p>Don't have an account? <a href="register.html">Register</a></p>
+        </div>
+    </main>
+
+    <script>
+        const searchContainer = document.getElementById('searchContainer');
+        const navDropdown = document.getElementById('navDropdown');
+
+        searchContainer.addEventListener('click', function (e) {
+            searchContainer.classList.toggle('active');
+            navDropdown.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        navDropdown.addEventListener('click', function (e) {
+            navDropdown.classList.toggle('active');
+            searchContainer.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', function () {
+            searchContainer.classList.remove('active');
+            navDropdown.classList.remove('active');
+        });
+    </script>
+</body>
+
+</html>

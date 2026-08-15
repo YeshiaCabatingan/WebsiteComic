@@ -1,0 +1,80 @@
+body {
+    padding-top: 80px;
+}
+
+.novel-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 0 20px 60px 20px;
+}
+
+.novel-header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 20px;
+}
+
+.novel-header h1 {
+    font-size: 28px;
+    color: #ff8906;
+    margin-bottom: 8px;
+}
+
+.volume-tag {
+    font-size: 14px;
+    color: #7d82b5;
+}
+
+.novel-content {
+    font-size: 18px;
+    line-height: 1.8; 
+    color: #fffffe;
+}
+
+.novel-content p {
+    margin-bottom: 24px;
+}
+
+.novel-content em {
+    color: #ae00ff;
+    font-style: normal;
+    font-weight: 600;
+}
+.novel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn.primary {
+    background-color: #ff8906;
+    color: #0f0e17;
+}
+
+.btn.primary:hover {
+    background-color: #1a2b4c;
+    color: #ff8906;
+}
+
+.btn.secondary {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fffffe;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.btn {
+    padding: 12px 25px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}

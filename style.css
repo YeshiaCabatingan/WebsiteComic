@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #0f0e17;
+    color: #fffffe;
+    min-height: 100vh;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(15, 14, 23, 0.95);
+    padding: 15px 50px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #0088ff;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #ae00ff;
+}
+
+.logo-link{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.logo-img{
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo{
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.logo span {
+    color: #ffe606;
+}
+.navbar .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.navbar .dropdown-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar .dropdown-btn img {
+    width: 24px; 
+    height: 24px;
+    object-fit: contain;
+}
+
+.navbar .dropdown-content {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    background-color: #2e2f3e;
+    min-width: 140px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.navbar .dropdown.active .dropdown-content {
+    display: block;
+}
+
+.navbar .dropdown-content a {
+    display: block;
+    padding: 10px 14px;
+    color: #fffffe;
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navbar .dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.navbar .dropdown-content a:hover {
+    background-color: #ff8906;
+    color: #121629;
+}
+
+

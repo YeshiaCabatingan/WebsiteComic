@@ -1,0 +1,86 @@
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #2e2f3e;
+    border-radius: 6px;
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: border-color 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.search-container:focus-within {
+    border-color: #ff8906;
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fffffe;
+    font-size: 14px;
+    padding-right: 8px;
+    width: 160px;
+}
+
+.search-input::placeholder {
+    color: #7d82b5;
+}
+
+.search-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #ff8906;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.search-btn:hover {
+    transform: scale(1.1);
+}
+
+/* --- Dropdown Styles Added Below --- */
+
+.search-dropdown {
+    display: none; 
+    position: absolute;
+    top: calc(100% + 8px); /* Positions it right below the search container with a slight gap */
+    left: 0;
+    right: 0;
+    background-color: #2e2f3e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+/* Shown when JavaScript toggles the active class */
+.search-container.active .search-dropdown {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 10px 14px;
+    color: #fffffe;
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background-color: #ff8906;
+    color: #121629;
+}

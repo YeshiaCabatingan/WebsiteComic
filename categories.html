@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebComics - Categories</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+    <link rel="stylesheet" href="style3-bloodhaven.css">
+    <style>
+        /* Categories Page Specific Layout */
+        body {
+            padding-top: 100px;
+            background-color: #0f0e17;
+        }
+
+        .categories-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .categories-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .categories-header h1 {
+            font-size: 32px;
+            color: #ff8906;
+            margin-bottom: 10px;
+        }
+
+        .categories-header p {
+            color: #7d82b5;
+            font-size: 16px;
+        }
+
+        .category-section {
+            margin-bottom: 50px;
+        }
+
+        .category-title {
+            font-size: 22px;
+            color: #fffffe;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #2e2f3e;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-info {
+            padding: 15px;
+        }
+
+        .card-info h3 {
+            font-size: 16px;
+            color: #fffffe;
+            margin-bottom: 5px;
+        }
+
+        .card-info p {
+            font-size: 13px;
+            color: #7d82b5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a href="index.html" class="logo-link">
+            <img src="img/image.png" alt="WebComics Logo" class="logo-img">
+            <span class="logo">Web<span>Comics</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html#home"><img src="img/home.jpg" alt="Home"></a>
+
+            <div class="dropdown" id="navDropdown">
+                <button class="dropdown-btn" id="iconDropdownBtn" type="button">
+                    <img src="img/menu.png" alt="Menu">
+                </button>
+                <div class="dropdown-content" id="iconDropdownContent">
+                    <a href="Bookmark.html#home">Bookmark</a>
+                    <a href="profile1.html#section1">Contact</a>
+                    <a href="register.html">Register</a>
+                </div>
+            </div>
+
+            <a href="index.html#trending">Trending</a>
+            <a href="categories.html" class="active">Categories</a>
+            <a href="index.html#about">About</a>
+        </nav>
+        <div class="search-container" id="searchContainer">
+            <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
+            <button class="search-btn" id="searchBtn" type="button">
+                <img src="img/search.png" alt="Search">
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+                <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
+                <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
+                <a href="#" class="dropdown-item">Connect Alternate World</a>
+                <a href="#" class="dropdown-item">Mysterious</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="categories-container">
+        <div class="categories-header">
+            <h1>Explore Categories</h1>
+            <p>Browse through your Comics and Web Novels</p>
+        </div>
+
+        <section class="category-section">
+            <h2 class="category-title">Comics</h2>
+            <div class="cards-grid">
+                <a href="bloodhaven.html" class="card">
+                    <img src="img/HavenArk_DevilsBlood.jpg" alt="Haven Ark: Devil's Blood">
+                    <div class="card-info">
+                        <h3>Haven Ark: Devil's Blood</h3>
+                        <p>Chapter 1</p>
+                    </div>
+                </a>
+                <a href="#" class="card">
+                    <img src="img/mysterious.jpg" alt="Comic 2">
+                    <div class="card-info">
+                        <h3>Mysterious</h3>
+                        <p>N/A</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="category-section">
+            <h2 class="category-title">Web Novels</h2>
+            <div class="cards-grid">
+                <a href="Forestconnect.html" class="card">
+                    <img src="img/Untitled.png" alt="Forest Connect">
+                    <div class="card-info">
+                        <h3>Forest Connect</h3>
+                        <p>Chapter 1</p>
+                    </div>
+                </a>
+                <a href="#" class="card">
+                    <img src="img/UntitledA.jpg" alt="Comic 2">
+                    <div class="card-info">
+                        <h3>Connect Alternate World</h3>
+                        <p>Chapter 1</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const searchContainer = document.getElementById('searchContainer');
+        const navDropdown = document.getElementById('navDropdown');
+
+        searchContainer.addEventListener('click', function (e) {
+            searchContainer.classList.toggle('active');
+            navDropdown.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        navDropdown.addEventListener('click', function (e) {
+            navDropdown.classList.toggle('active');
+            searchContainer.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', function () {
+            searchContainer.classList.remove('active');
+            navDropdown.classList.remove('active');
+        });
+    </script>
+</body>
+
+</html>

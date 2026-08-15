@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haven Ark: Devil's Blood</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+    <link rel="stylesheet" href="style3-bloodhaven.css">
+</head>
+
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo-link">
+            <img src="img/image.png" alt="WebComics Logo" class="logo-img">
+            <span class ="logo">Web<span>Comics</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html#home"><img src="img/home.jpg"></a>
+
+            <div class="dropdown" id="navDropdown">
+                <button class="dropdown-btn" id="iconDropdownBtn" type="button">
+                    <img src="img/menu.png" alt="Menu">
+                </button>
+                <div class="dropdown-content" id="iconDropdownContent">
+                    <a href="bookmark.html">Bookmark</a>
+                    <a href="profile1.html#section1">Contact</a>
+                   <a href="register.html">Register</a>
+                </div>
+            </div>
+
+            <a href="index.html#trending">Trending</a>
+            <a href="categories.html">Categories</a>
+            <a href="index.html#about">About</a>
+        </nav>
+        <div class="search-container" id="searchContainer">
+            <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
+            <button class="search-btn" id="searchBtn">
+                <img src="img/search.png" alt="Search">
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+                <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
+                <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
+                <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
+                <a href="mysterious.html" class="dropdown-item">Mysterious</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="comic-detail-hero">
+        <div class="comic-detail-container">
+            <div class="comic-cover">
+                <img src="img/mysterious.jpg" alt="Haven Ark: Devil's Blood Cover">
+            </div>
+
+            <div class="comic-meta">
+                <h1>Mysterious</h1>
+                <p class="comic-stats"><strong>Author/Creator: </strong> Tester <br> <strong> Artist:</strong>
+                    Cabatingan &nbsp;|&nbsp; <strong>Chapters:</strong> N/A</p>
+
+                <div class="description-box">
+                    <h3>Synopsis</h3>
+                    <p>A seafarer fell off from the ship and landed on land of mysterious surrounded by the Great Dark Sea called, Omnicron Salt Sea where all monsters resides. Will he survive in this stranded island?</p>
+                    <br>
+                    <h3>Genre</h3>
+                    <p><em>Fantasy</em></p>
+                    <p><em>Action</em></p>
+                    <p><em>Survival</em></p>
+                </div>
+
+                <div class="hero-buttons">
+                    <a href="#chapters" class="btn primary">Start Reading</a>
+                    <a href="#" class="btn secondary bookmark-toggle">
+
+                        <img src="img/bookmark_24.png" alt="bookmark_24" class="btn-icon">
+                        <span class="btn-text">Bookmark</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="chapters" class="section chapters-section">
+        <h2>Chapters</h2>
+        <div class="chapter-list">
+            <h3>Unavailable . . .</h3>
+        </div>
+    </section>
+
+    <script>
+        const bookmarkBtn = document.querySelector('.bookmark-toggle');
+
+        if (bookmarkBtn) {
+
+            const comicId = "haven-ark-devils-blood";
+            const isBookmarked = localStorage.getItem(`bookmark_${comicId}`) === 'true';
+
+            const icon = bookmarkBtn.querySelector('.btn-icon');
+
+            if (isBookmarked) {
+                bookmarkBtn.classList.add('bookmarked-green');
+                icon.src = 'img/bookmark_check.png';
+            }
+
+            bookmarkBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                this.classList.toggle('bookmarked-green');
+
+                const currentlyBookmarked = this.classList.contains('bookmarked-green');
+
+                if (currentlyBookmarked) {
+                    icon.src = 'img/bookmark_check.png';
+                    localStorage.setItem(`bookmark_${comicId}`, 'true');
+                } else {
+                    icon.src = 'img/bookmark_24.png';
+                    localStorage.setItem(`bookmark_${comicId}`, 'false');
+                }
+            });
+        }
+    </script>
+
+    <script>
+        const searchContainer = document.getElementById('searchContainer');
+        const navDropdown = document.getElementById('navDropdown');
+
+        searchContainer.addEventListener('click', function (e) {
+            searchContainer.classList.toggle('active');
+            navDropdown.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        navDropdown.addEventListener('click', function (e) {
+            navDropdown.classList.toggle('active');
+            searchContainer.classList.remove('active'); 
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', function () {
+            searchContainer.classList.remove('active');
+            navDropdown.classList.remove('active');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Connect - Web Novel</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+    <link rel="stylesheet" href="stylechapter.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a href="index.html" class="logo-link">
+            <img src="img/image.png" alt="WebComics Logo" class="logo-img">
+            <span class="logo">Web<span>Comics</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html#home"><img src="img/home.jpg" alt="Home"></a>
+
+            <div class="dropdown" id="navDropdown">
+                <button class="dropdown-btn" id="iconDropdownBtn" type="button">
+                    <img src="img/menu.png" alt="Menu">
+                </button>
+                <div class="dropdown-content" id="iconDropdownContent">
+                    <a href="Bookmark.html#home">Bookmark</a>
+                    <a href="profile1.html#section1">Contact</a>
+                    <a href="register.html">Register</a>
+                </div>
+            </div>
+
+            <a href="index.html#trending">Trending</a>
+            <a href="categories.html">Categories</a>
+            <a href="index.html#about">About</a>
+        </nav>
+        <div class="search-container" id="searchContainer">
+            <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
+            <button class="search-btn" id="searchBtn" type="button">
+                <img src="img/search.png" alt="Search">
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+                <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
+                <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
+                <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
+                <a href="mysterious.html" class="dropdown-item">Mysterious</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="novel-container">
+        <div class="novel-header">
+            <h1>Through the mirror</h1>
+            <p class="volume-tag">Volume 1 - Chapter 1</p>
+        </div>
+
+        <div class="novel-content">
+            <p>A canine wandering aimlessly nearby the road. His fur is white as snow, it's eyes are gold meant for it
+                to be shine by the moon. </p>
+            <p>A beast without a call, left his marks imprint on muddy ground, keep walking farther. Like present from
+                seconds turned past, but too late to changed against passing time. As it walks farther and farther, the
+                canine stopped.</p>
+            <p>The beast tilt its head as if curiousity child thinking how window standing still without a support and
+                its frame.</p>
+            <p>As if something must've holding a fragile glass in misplaced location. In front of him, his image slowly
+                reflected on like a mirror on the wall. Window made of glass, such fragile background.</p>
+            <p>Unrecognized figures walking by below him whom slowly show his reflection on the window. The beast left a
+                little smirk on, giving a leeway interested in. Being lured by the window and the moment he approached
+                for a second. Disappeared.</p>
+        </div>
+
+        <div class="novel-footer">
+            <a href="index.html" class="btn secondary">Back Home</a>
+            <a href="Forestconnect.html" class="btn primary">Next Chapter</a>
+        </div>
+    </main>
+
+    <script>
+        const searchContainer = document.getElementById('searchContainer');
+        const navDropdown = document.getElementById('navDropdown');
+
+        searchContainer.addEventListener('click', function (e) {
+            searchContainer.classList.toggle('active');
+            navDropdown.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        navDropdown.addEventListener('click', function (e) {
+            navDropdown.classList.toggle('active');
+            searchContainer.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', function () {
+            searchContainer.classList.remove('active');
+            navDropdown.classList.remove('active');
+        });
+    </script>
+</body>
+
+</html>
