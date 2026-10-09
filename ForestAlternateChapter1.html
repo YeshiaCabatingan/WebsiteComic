@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forest Connect - Web Novel</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="search.css">
-    <link rel="stylesheet" href="stylechapter.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/stylechapter.css">
+    <link rel="stylesheet" href="css/comment.css">
 </head>
 
 <body>
@@ -35,6 +36,11 @@
             <a href="categories.html">Categories</a>
             <a href="index.html#about">About</a>
         </nav>
+
+        <a href="account.html" class="profile-icon-btn">
+            <img id="navUserIcon" src="img/people.png" alt="Account">
+        </a>
+
         <div class="search-container" id="searchContainer">
             <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
             <button class="search-btn" id="searchBtn" type="button">
@@ -69,11 +75,15 @@
             <p>You were confused what was the man talks about. </p>
             <p>"Don't hide from me." The voice of man angered at you. Looking at you with his fading light through his
                 eye sockets. His breathing were shown cold as clouds within his mask.
-            </p>    
+            </p>
             <p>He raised his bloody shovel trembling into the air. " I know you're there. I. Know. You're. There. "</p>
-            <p>The room slowly gets darker, and darker while you're struggling to set yourself free from this unknown of somewhat paranormal activity. You tried to call for help, but no one's there except the man whose about to swing his blunt weapon at any moment in so-called  room.</p>
-            <p>"If only IT were to be selfish as you and I. Things could have changed. One day, WE would've been so.. nice to have the same ideals."</p>
-            <p>"But YOU refused." The man continues his talk while he gripped his hold on unto the shovel in the air. </p>
+            <p>The room slowly gets darker, and darker while you're struggling to set yourself free from this unknown of
+                somewhat paranormal activity. You tried to call for help, but no one's there except the man whose about
+                to swing his blunt weapon at any moment in so-called room.</p>
+            <p>"If only IT were to be selfish as you and I. Things could have changed. One day, WE would've been so..
+                nice to have the same ideals."</p>
+            <p>"But YOU refused." The man continues his talk while he gripped his hold on unto the shovel in the air.
+            </p>
             <p>.</p>
             <p>.</p>
             <p>.</p>
@@ -89,6 +99,25 @@
             <a href="ForestAlternate.html" class="btn primary">Next Chapter</a>
         </div>
     </main>
+
+    <section class="comments-section">
+        <div class="comments-header">
+            <h3><span id="commentCount">0</span> comments</h3>
+        </div>
+
+        <form class="comment-form" id="commentForm">
+            <div class="form-user-icon"></div>
+            <div class="form-input-container">
+                <input type="text" id="commentAuthor" placeholder="Your Name" required autocomplete="off">
+                <textarea id="commentText" placeholder="Share your thoughts about this chapter..." required></textarea>
+                <div class="form-footer">
+                    <button type="submit">Post Comment</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="commentsList"></div>
+    </section>
 
     <script>
         const searchContainer = document.getElementById('searchContainer');
@@ -110,6 +139,66 @@
             searchContainer.classList.remove('active');
             navDropdown.classList.remove('active');
         });
+    </script>
+
+    <!--Comment Script-->
+    <script>
+        const commentForm = document.getElementById('commentForm');
+        const commentAuthor = document.getElementById('commentAuthor');
+        const commentText = document.getElementById('commentText');
+        const commentsList = document.getElementById('commentsList');
+        const commentCount = document.getElementById('commentCount');
+
+        const storageKey = 'forest_alternate_chapter1_comments'; // Keep your unique key here
+
+        function loadComments() {
+            const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+            commentsList.innerHTML = '';
+            commentCount.textContent = savedComments.length;
+
+            savedComments.forEach(c => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment-item';
+
+                // Creates a circular initial letter avatar from the author's name
+                const initial = c.author ? c.author.charAt(0).toUpperCase() : '?';
+
+                commentDiv.innerHTML = `
+                <div class="comment-avatar">${initial}</div>
+                <div class="comment-content">
+                    <div class="comment-header-row">
+                        <span class="comment-author">${escapeHTML(c.author)}</span>
+                        <span class="comment-time">${c.time || 'Just now'}</span>
+                    </div>
+                    <div class="comment-text">${escapeHTML(c.text)}</div>
+                </div>
+            `;
+                commentsList.appendChild(commentDiv);
+            });
+        }
+
+        commentForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const newComment = {
+                author: commentAuthor.value.trim(),
+                text: commentText.value.trim(),
+                time: 'Just now'
+            };
+            const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+            savedComments.unshift(newComment);
+            localStorage.setItem(storageKey, JSON.stringify(savedComments));
+            commentAuthor.value = '';
+            commentText.value = '';
+            loadComments();
+        });
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g,
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        loadComments();
     </script>
 </body>
 

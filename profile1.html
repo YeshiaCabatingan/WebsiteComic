@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="search.css">
-    <link rel="stylesheet" href="style4-profiles.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/style4-profiles.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-<header class="navbar">
+    <header class="navbar">
         <a href="index.html" class="logo-link">
             <img src="img/image.png" alt="WebComics Logo" class="logo-img">
-            <span class ="logo">Web<span>Comics</span></span>
+            <span class="logo">Web<span>Comics</span></span>
         </a>
         <nav class="nav-links">
             <a href="index.html#home"><img src="img/home.jpg"></a>
@@ -34,6 +34,11 @@
             <a href="categories.html">Categories</a>
             <a href="index.html#about">About</a>
         </nav>
+
+        <a href="account.html" class="profile-icon-btn">
+            <img id="navUserIcon" src="img/people.png" alt="Account">
+        </a>
+        
         <div class="search-container" id="searchContainer">
             <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
             <button class="search-btn" id="searchBtn">
@@ -136,7 +141,7 @@
 
         navDropdown.addEventListener('click', function (e) {
             navDropdown.classList.toggle('active');
-            searchContainer.classList.remove('active'); 
+            searchContainer.classList.remove('active');
             e.stopPropagation();
         });
 

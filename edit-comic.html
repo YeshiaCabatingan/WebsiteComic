@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Comic - WebComics</title>
+    <style>
+        body {
+            background-color: #12131c;
+            color: #fffffe;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .edit-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(46, 47, 62, 0.3);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #a7a9be;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: #1a1b26;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .save-btn {
+            background-color: #0088ff;
+            color: white;
+        }
+
+        .back-btn {
+            background-color: #333446;
+            color: #fffffe;
+            margin-right: 10px;
+        }
+
+        .chapter-section {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="edit-container">
+        <h1>Edit Comic & Chapters</h1>
+        <p style="color: #a7a9be; margin-bottom: 25px;">Update your comic details or add new chapters.</p>
+
+        <form id="editComicForm">
+            <div class="form-group">
+                <label for="comicTitle">Comic Title</label>
+                <input type="text" id="comicTitle" required>
+            </div>
+
+            <div class="form-group">
+                <label for="comicSynopsis">Synopsis / Description</label>
+                <textarea id="comicSynopsis" required></textarea>
+            </div>
+
+            <!-- Chapter Management Section -->
+            <div class="chapter-section">
+                <h3>Chapters</h3>
+                <div id="chaptersList" style="margin-bottom: 15px; color: #a7a9be;">
+                    <!-- Existing chapters will display here -->
+                </div>
+                <div class="form-group">
+                    <label for="newChapterTitle">Add New Chapter Title / Number</label>
+                    <input type="text" id="newChapterTitle" placeholder="e.g., Chapter 1: The Beginning">
+                </div>
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Add Chapter Pages (One by One)</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="file" id="singlePageInput" accept="image/*"
+                            style="background: #252530; padding: 10px; border-radius: 6px; border: 1px solid #374151; color: white; flex-grow: 1;">
+                        <button type="button" class="btn btn-secondary" id="addPageBtn"
+                            style="padding: 10px 16px; background-color: #333446; color: white;">+ Add Page</button>
+                    </div>
+                    <!-- Temporary staging area for the pages of the chapter currently being added -->
+                    <div id="tempPagesPreview"
+                        style="display: flex; gap: 10px; overflow-x: auto; margin-top: 10px; padding: 10px; background: #121216; border-radius: 6px; min-height: 50px;">
+                        <span style="color: #9ca3af; font-size: 14px; align-self: center;">No pages added to this
+                            chapter yet.</span>
+                    </div>
+                </div>
+                <button type="button" id="addChapterBtn" style="background-color: #ff8906; color: #121629;">+ Add
+                    Chapter</button>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button type="button" class="back-btn" onclick="window.location.href='account.html'">Cancel</button>
+                <button type="submit" class="save-btn">Save All Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let currentComicId = localStorage.getItem('editing_comic_id');
+        let allComics = JSON.parse(localStorage.getItem('webcomics_list')) || [];
+
+        // Find the specific comic being edited
+        let comicIndex = allComics.findIndex(c => c.id == currentComicId);
+        let comic = allComics[comicIndex];
+
+        // Temporary staging array for pages of the chapter currently being created
+        let stagingPages = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!comic) {
+                alert('Comic not found!');
+                window.location.href = 'account.html';
+                return;
+            }
+
+            // Populate form fields with current comic data
+            document.getElementById('comicTitle').value = comic.title || '';
+            document.getElementById('comicSynopsis').value = comic.synopsis || '';
+
+            renderChapters();
+        });
+
+        function renderChapters() {
+            const container = document.getElementById('chaptersList');
+            if (!comic.chapters || comic.chapters.length === 0) {
+                container.innerHTML = '<p>No chapters added yet.</p>';
+                return;
+            }
+            container.innerHTML = comic.chapters.map((ch, index) => `
+                <div style="background: #1a1b26; padding: 10px; margin-bottom: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>${ch.title} (${ch.pages ? ch.pages.length : 0} pages)</span>
+                    <button type="button" onclick="deleteChapter(${index})" style="background: #ff4d4d; color: white; padding: 4px 8px; font-size: 12px; border-radius: 4px; border: none; cursor: pointer;">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Handle uploading a single page and adding it to the staging list
+        document.getElementById('addPageBtn').addEventListener('click', function () {
+            const fileInput = document.getElementById('singlePageInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select an image file first.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function () {
+                    // Create a canvas to resize and compress the image
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800; // Safe width for webcomic panels
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > MAX_WIDTH) {
+                        height = Math.round((height * MAX_WIDTH) / width);
+                        width = MAX_WIDTH;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Export as compressed JPEG (0.7 quality) to drastically reduce file size
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                    stagingPages.push(compressedBase64); // Push compressed image into staging
+
+                    // Clear the file input
+                    fileInput.value = '';
+
+                    // Refresh the staging preview container
+                    renderStagingPreview();
+                };
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Function to render the temporary page thumbnails
+        function renderStagingPreview() {
+            const previewContainer = document.getElementById('tempPagesPreview');
+            if (stagingPages.length === 0) {
+                previewContainer.innerHTML = `<span style="color: #9ca3af; font-size: 14px; align-self: center;">No pages added to this chapter yet.</span>`;
+                return;
+            }
+
+            previewContainer.innerHTML = '';
+            stagingPages.forEach((imgSrc, idx) => {
+                const thumb = document.createElement('div');
+                thumb.style.cssText = `position: relative; min-width: 50px; height: 60px; background-image: url('${imgSrc}'); background-size: cover; background-position: center; border-radius: 4px; border: 1px solid #6366f1;`;
+
+                // Add a small remove button for individual staged pages
+                thumb.innerHTML = `
+                    <button type="button" onclick="removeStagingPage(${idx})" style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
+                `;
+                previewContainer.appendChild(thumb);
+            });
+        }
+
+        // Allow deleting a page from staging before finalizing the chapter
+        window.removeStagingPage = function (index) {
+            stagingPages.splice(index, 1);
+            renderStagingPreview();
+        };
+
+        // Handle finalizing and saving the chapter with all its sequenced pages
+        document.getElementById('addChapterBtn').addEventListener('click', function () {
+            const chapterTitleInput = document.getElementById('newChapterTitle');
+            const title = chapterTitleInput.value.trim();
+
+            if (!title) {
+                alert('Please enter a chapter title/number first.');
+                return;
+            }
+
+            if (stagingPages.length === 0) {
+                alert('Please add at least one page image using the "+ Add Page" button.');
+                return;
+            }
+
+            // Create the final chapter object containing page array
+            const newChapter = {
+                title: title,
+                pages: [...stagingPages], // Copy sequenced pages array
+                date: new Date().toLocaleDateString()
+            };
+
+            // Push to current comic's chapter list
+            comic.chapters = comic.chapters || [];
+            comic.chapters.push(newChapter);
+
+            // Reset form fields and staging array
+            chapterTitleInput.value = '';
+            stagingPages = [];
+            renderStagingPreview();
+
+            // Refresh the main chapter list UI on the edit page
+            renderChapters();
+            alert('Chapter added successfully! Remember to click "Save All Changes".');
+        });
+
+        function deleteChapter(index) {
+            comic.chapters.splice(index, 1);
+            renderChapters();
+        }
+
+        // Save form updates back to localStorage
+        document.getElementById('editComicForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // AUTO-SAVE CHECK: If the user typed a title and staged pages, 
+            // but forgot to click "+ Add Chapter", save it automatically on submit!
+            const titleInput = document.getElementById('newChapterTitle');
+            const title = titleInput.value.trim();
+
+            if (title && stagingPages.length > 0) {
+                const autoChapter = {
+                    title: title,
+                    pages: [...stagingPages],
+                    date: new Date().toLocaleDateString()
+                };
+                comic.chapters = comic.chapters || [];
+                comic.chapters.push(autoChapter);
+            }
+
+            // Update main comic info
+            comic.title = document.getElementById('comicTitle').value.trim();
+            comic.synopsis = document.getElementById('comicSynopsis').value.trim();
+
+            // Save to master list and active view
+            allComics[comicIndex] = comic;
+            localStorage.setItem('webcomics_list', JSON.stringify(allComics));
+            localStorage.setItem('active_comic', JSON.stringify(comic));
+
+            alert('Comic updated and saved successfully!');
+            window.location.href = 'account.html';
+        });
+    </script>
+</body>
+
+</html>

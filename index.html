@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebComics - Main</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="search.css">
-    <link rel="stylesheet" href="style1-hero.css">
-    <link rel="stylesheet" href="style2-about&collab.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/style1-hero.css">
+    <link rel="stylesheet" href="css/style2-about&collab.css">
 </head>
 
 <body id="home">
@@ -36,6 +36,11 @@
             <a href="categories.html">Categories</a>
             <a href="index.html#about">About</a>
         </nav>
+
+        <a href="account.html" class="profile-icon-btn">
+            <img id="navUserIcon" src="img/people.png" alt="Account">
+        </a>
+
         <div class="search-container" id="searchContainer">
             <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
             <button class="search-btn" id="searchBtn">
@@ -61,14 +66,21 @@
             <div class="hero-buttons">
                 <div class="hero-buttons">
                     <a href="bloodhaven.html#chapters" class="btn primary">Read</a>
-                    <a href="bloodhaven-details.html" class="btn secondary">Details</a>
+                    <a href="bloodhaven/bloodhaven-details.html" class="btn secondary">Details</a>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Trending Section (Keep this strictly for your main/official comics) -->
     <section id="trending" class="section">
-        <h2>Trending Now</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Trending Now</h2>
+            <a href="publishcomic.html" class="btn primary"
+                style="text-decoration: none; padding: 6px 14px; font-size: 14px; border-radius: 4px;">+ Publish
+                Comic</a>
+        </div>
+
         <div class="comic-grid">
             <div class="comic-card">
                 <div class="card-img" style="background-image: url(img/UntitledHaven.jpg);">
@@ -109,6 +121,14 @@
                     <p>Comic - Coming soon . . . </p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- NEW: Latest Community Uploads Section -->
+    <section id="latest" class="section" style="margin-top: 40px;">
+        <h2>Latest Community Uploads</h2>
+        <div class="comic-grid" id="latestComicGrid">
+            <!-- User-published comics will automatically load here instead -->
         </div>
     </section>
 
@@ -164,6 +184,87 @@
         document.addEventListener('click', function () {
             searchContainer.classList.remove('active');
             navDropdown.classList.remove('active');
+        });
+    </script>
+
+    <!--Publishing a comic-->
+<script>
+    // Load user-published comics exclusively into the Latest section with professional card layout
+    window.addEventListener('DOMContentLoaded', function () {
+        const customComics = JSON.parse(localStorage.getItem('webcomics_list')) || [];
+        const latestGrid = document.getElementById('latestComicGrid');
+        const latestSection = document.getElementById('latest');
+
+        // Hide the latest section entirely if no one has published anything yet
+        if (customComics.length === 0) {
+            latestSection.style.display = 'none';
+            return;
+        }
+
+        customComics.forEach(comic => {
+            const card = document.createElement('div');
+            card.className = 'comic-card';
+
+            // Support both 'cover' and 'image' properties, and count actual chapters
+            const imageSource = comic.cover || comic.image || '';
+            const chapterCount = comic.chapters ? comic.chapters.length : 0;
+
+            // Format the stored timestamp nicely
+            let timeDisplay = 'Recently';
+            if (comic.createdAt) {
+                const postedDate = new Date(comic.createdAt);
+                const now = new Date();
+                const diffMs = now - postedDate;
+                const diffMins = Math.floor(diffMs / (1000 * 60));
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+                if (diffMins < 1) {
+                    timeDisplay = 'Just now';
+                } else if (diffMins < 60) {
+                    timeDisplay = `${diffMins}m ago`;
+                } else if (diffHours < 24) {
+                    timeDisplay = `${diffHours}h ago`;
+                } else if (diffDays < 7) {
+                    timeDisplay = `${diffDays}d ago`;
+                } else {
+                    timeDisplay = postedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                }
+            }
+
+            card.innerHTML = `
+                <div class="card-img" style="background-image: url('${imageSource}');"></div>
+                <div class="card-info">
+                    <div class="card-meta">
+                        <span>Ch. ${chapterCount}</span>
+                        <span>${timeDisplay}</span>
+                    </div>
+                    <h3>${comic.title}</h3>
+                </div>
+            `;
+
+            card.addEventListener('click', function () {
+                localStorage.setItem('active_comic', JSON.stringify(comic));
+                window.location.href = 'comic-details.html';
+            });
+
+            latestGrid.appendChild(card);
+        });
+    });
+</script>
+
+    <!--Avatar Profile-->
+
+    <script>document.addEventListener('DOMContentLoaded', function () {
+            const savedAvatar = localStorage.getItem('user_avatar');
+            if (savedAvatar) {
+                const navIcon = document.getElementById('navUserIcon');
+                if (navIcon) {
+                    navIcon.src = savedAvatar;
+                    navIcon.style.borderRadius = '50%';
+                    navIcon.style.objectFit = 'cover';
+                }
+            }
         });
     </script>
 </body>

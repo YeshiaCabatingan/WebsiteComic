@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Read Comic - WebComics</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/stylechapter.css">
+    <link rel="stylesheet" href="css/comment.css">
+    <style>
+        body {
+            padding-top: 90px;
+            background-color: #0f0e17;
+            color: #fffffe;
+            font-family: sans-serif;
+            margin: 0;
+        }
+
+        .manhwa-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            background-color: #0f0e17;
+            padding-bottom: 50px;
+        }
+
+        .chapter-header-title {
+            text-align: center;
+            padding: 30px 20px;
+            color: #fffffe;
+        }
+
+        .chapter-header-title h2 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #ff8906;
+        }
+
+        .chapter-header-title p {
+            font-size: 14px;
+            color: #7d82b5;
+        }
+
+        .comic-panel {
+            width: 100%;
+            line-height: 0;
+            margin-bottom: 5px;
+        }
+
+        .comic-panel img {
+            width: 100%;
+            height: auto;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .reader-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 20px auto 0 auto;
+            padding: 20px;
+            background-color: #2e2f3e;
+            border-radius: 6px;
+        }
+
+        .reader-footer a {
+            color: #fffffe;
+            text-decoration: none;
+            background-color: #ff8906;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+
+        .reader-footer a:hover {
+            background-color: #e57805;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 50px;
+            color: #7d82b5;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <a href="index.html" class="logo-link">
+            <img src="img/image.png" alt="WebComics Logo" class="logo-img">
+            <span class="logo">Web<span>Comics</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html#home"><img src="img/home.jpg" alt="Home"></a>
+            <div class="dropdown" id="navDropdown">
+                <button class="dropdown-btn" id="iconDropdownBtn" type="button">
+                    <img src="img/menu.png" alt="Menu">
+                </button>
+                <div class="dropdown-content" id="iconDropdownContent">
+                    <a href="Bookmark.html#home">Bookmark</a>
+                    <a href="profile1.html#section1">Contact</a>
+                    <a href="register.html">Register</a>
+                </div>
+            </div>
+            <a href="index.html#trending">Trending</a>
+            <a href="categories.html">Categories</a>
+            <a href="index.html#about">About</a>
+        </nav>
+
+        <a href="account.html" class="profile-icon-btn">
+            <img id="navUserIcon" src="img/people.png" alt="Account">
+        </a>
+
+        <div class="search-container" id="searchContainer">
+            <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
+            <button class="search-btn" id="searchBtn" type="button">
+                <img src="img/search.png" alt="Search">
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+                <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
+                <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
+                <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
+                <a href="mysterious.html" class="dropdown-item">Mysterious</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dynamic Reader Container -->
+    <main class="manhwa-container">
+        <div class="chapter-header-title">
+            <h2 id="comicTitleDisplay">Loading Comic...</h2>
+            <p id="chapterTitleDisplay">Chapter Title</p>
+        </div>
+
+        <!-- Dynamic Panels inserted here -->
+        <div id="comicViewerContainer">
+            <!-- Pages load dynamically -->
+        </div>
+
+        <!-- Footer Navigation -->
+        <div class="reader-footer" id="footerNav" style="display: none;">
+            <a href="#" id="prevChapterBtn" style="display: none;">&larr; Previous Chapter</a>
+            <a href="comic-details.html" class="btn secondary">Back to Details</a>
+            <a href="#" id="nextChapterBtn" style="display: none;">Next Chapter &rarr;</a>
+        </div>
+    </main>
+
+    <!-- Posting Comment Section -->
+    <!-- Comment Counter Header -->
+    <div class="comments-section-header" style="margin-bottom: 20px; color: #fffffe;">
+        <h3><span id="commentCount">0</span> comments</h3>
+    </div>
+
+    <!-- Comment Form -->
+    <form class="comment-form" id="commentForm">
+        <div class="form-user-icon" id="formUserAvatarContainer"
+            style="overflow: hidden; border-radius: 50%; width: 40px; height: 40px; background-color: #2e2f3e; display: flex; align-items: center; justify-content: center;">
+            <img id="commentFormAvatarImg" src="img/people.png" alt="Avatar"
+                style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+
+        <div class="form-input-container" style="flex-grow: 1; display: flex; flex-direction: column; gap: 10px;">
+            <input type="text" id="commentAuthor" placeholder="Your Name" autocomplete="off" style="display: none;">
+            <textarea id="commentText" placeholder="Share your thoughts about this chapter..." required
+                style="width: 100%; min-height: 80px; background: #151417; border: 1px solid rgba(255,255,255,0.1); color: #fffffe; padding: 12px; border-radius: 8px; resize: vertical;"></textarea>
+
+            <div class="form-footer" style="display: flex; justify-content: flex-end;">
+                <button type="submit"
+                    style="background: #0088ff; color: #fffffe; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Post
+                    Comment</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Where Posted Comments Are Injected -->
+    <div id="commentsList" style="margin-top: 30px;"></div>
+
+    <!-- Navigation & Dropdown Script -->
+    <script>
+        const searchContainer = document.getElementById('searchContainer');
+        const navDropdown = document.getElementById('navDropdown');
+
+        searchContainer.addEventListener('click', function (e) {
+            searchContainer.classList.toggle('active');
+            navDropdown.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        navDropdown.addEventListener('click', function (e) {
+            navDropdown.classList.toggle('active');
+            searchContainer.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', function () {
+            searchContainer.classList.remove('active');
+            navDropdown.classList.remove('active');
+        });
+    </script>
+
+    <!-- Dynamic Comic Reader Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const activeComic = JSON.parse(localStorage.getItem('active_comic'));
+
+            if (!activeComic || !activeComic.chapters) {
+                document.getElementById('comicViewerContainer').innerHTML = `
+                    <div class="error-message">
+                        <h2>Comic or chapters not found.</h2>
+                        <p>Please return home and select a valid comic.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const chapterIndex = parseInt(urlParams.get('chapter'), 10);
+            const chapters = activeComic.chapters;
+
+            if (isNaN(chapterIndex) || !chapters[chapterIndex]) {
+                document.getElementById('comicViewerContainer').innerHTML = `
+                    <div class="error-message">
+                        <h2>Chapter not found.</h2>
+                        <p>The chapter you are looking for does not exist.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const currentChapter = chapters[chapterIndex];
+
+            // Update Header Information
+            document.getElementById('pageTitle').textContent = `${activeComic.title} - ${currentChapter.title} - WebComics`;
+            document.getElementById('comicTitleDisplay').textContent = activeComic.title;
+            document.getElementById('chapterTitleDisplay').textContent = currentChapter.title;
+
+            const pages = currentChapter.pages || [];
+            const viewerContainer = document.getElementById('comicViewerContainer');
+
+            if (pages.length === 0) {
+                viewerContainer.innerHTML = `
+                    <div class="error-message">
+                        <h3>This chapter has no pages uploaded yet.</h3>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render Dynamic Compressed Panels
+            viewerContainer.innerHTML = '';
+            pages.forEach((pageBase64, index) => {
+                const panelDiv = document.createElement('div');
+                panelDiv.className = 'comic-panel';
+                panelDiv.innerHTML = `<img src="${pageBase64}" alt="Panel ${index + 1}">`;
+                viewerContainer.appendChild(panelDiv);
+            });
+
+            // Handle Chapter Footer Navigation
+            const footerNav = document.getElementById('footerNav');
+            const prevBtn = document.getElementById('prevChapterBtn');
+            const nextBtn = document.getElementById('nextChapterBtn');
+
+            footerNav.style.display = 'flex';
+
+            if (chapterIndex > 0) {
+                prevBtn.href = `read.html?chapter=${chapterIndex - 1}`;
+                prevBtn.style.display = 'inline-block';
+            }
+
+            if (chapterIndex < chapters.length - 1) {
+                nextBtn.href = `read.html?chapter=${chapterIndex + 1}`;
+                nextBtn.style.display = 'inline-block';
+            }
+        });
+    </script>
+
+    <!-- Comment Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. Pull Logged-in User Profile & Avatar Data
+            const savedAvatar = localStorage.getItem('user_avatar');
+            // Assuming you store the logged-in username or profile object, adjust keys if needed:
+            const currentUser = JSON.parse(localStorage.getItem('current_user_profile')) || { name: "admin" };
+            const username = localStorage.getItem('logged_in_username') || currentUser.name || "Admin User";
+
+            // Update the comment box form avatar preview
+            const formAvatarImg = document.getElementById('commentFormAvatarImg');
+            if (formAvatarImg && savedAvatar) {
+                formAvatarImg.src = savedAvatar;
+            }
+
+            const commentForm = document.getElementById('commentForm');
+            const commentText = document.getElementById('commentText');
+            const commentsList = document.getElementById('commentsList');
+            const commentCount = document.getElementById('commentCount');
+
+            // Use a unique storage key per chapter based on URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const chapterIdx = urlParams.get('chapter') || '0';
+            const storageKey = 'webcomics_chapter_' + chapterIdx + '_comments';
+
+            function loadComments() {
+                const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+                commentsList.innerHTML = '';
+                commentCount.textContent = savedComments.length;
+
+                savedComments.forEach(c => {
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'comment-item';
+                    commentDiv.style.display = 'flex';
+                    commentDiv.style.gap = '15px';
+                    commentDiv.style.marginBottom = '20px';
+
+                    // Render user's custom avatar if available, otherwise fallback to first letter initial
+                    let avatarHTML = '';
+                    if (c.avatar) {
+                        avatarHTML = `<div class="comment-avatar" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex-shrink: 0;"><img src="${c.avatar}" style="width: 100%; height: 100%; object-fit: cover;"></div>`;
+                    } else {
+                        const initial = c.author ? c.author.charAt(0).toUpperCase() : '?';
+                        avatarHTML = `<div class="comment-avatar" style="width: 40px; height: 40px; border-radius: 50%; background: #ff8906; color: #0f0e17; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">${initial}</div>`;
+                    }
+
+                    commentDiv.innerHTML = `
+                ${avatarHTML}
+                <div class="comment-content" style="flex-grow: 1;">
+                    <div class="comment-header-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span class="comment-author" style="font-weight: bold; color: #ff8906;">${escapeHTML(c.author)}</span>
+                        <span class="comment-time" style="font-size: 12px; color: #7d82b5;">${c.time || 'Just now'}</span>
+                    </div>
+                    <div class="comment-text" style="color: #fffffe; line-height: 1.4;">${escapeHTML(c.text)}</div>
+                </div>
+            `;
+                    commentsList.appendChild(commentDiv);
+                });
+            }
+
+            commentForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const textVal = commentText.value.trim();
+                if (!textVal) return;
+
+                const newComment = {
+                    author: username,
+                    text: textVal,
+                    avatar: savedAvatar || '', // Attach their custom uploaded avatar snapshot to the comment
+                    time: 'Just now'
+                };
+
+                const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+                savedComments.unshift(newComment);
+                localStorage.setItem(storageKey, JSON.stringify(savedComments));
+
+                commentText.value = '';
+                loadComments();
+            });
+
+            function escapeHTML(str) {
+                return str.replace(/[&<>'"]/g,
+                    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+                );
+            }
+
+            loadComments();
+        });
+    </script>
+
+    <!-- User Avatar Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const savedAvatar = localStorage.getItem('user_avatar');
+            if (savedAvatar) {
+                const navIcon = document.getElementById('navUserIcon');
+                if (navIcon) {
+                    navIcon.src = savedAvatar;
+                    navIcon.style.borderRadius = '50%';
+                    navIcon.style.objectFit = 'cover';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

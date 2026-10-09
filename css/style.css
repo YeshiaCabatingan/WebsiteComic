@@ -22,12 +22,16 @@ body {
     width: 100%;
     top: 0;
     z-index: 1000;
+    box-sizing: border-box;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .nav-links {
     display: flex;
     gap: 30px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .nav-links a {
@@ -122,4 +126,27 @@ body {
     color: #121629;
 }
 
+.profile-icon-btn {
+    background-color: #ffffff;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto; 
+    margin-right: 15px; 
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.profile-icon-btn:hover {
+    transform: scale(1.05);
+}
+
+.profile-icon-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
 

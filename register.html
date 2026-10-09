@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="search">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="search.css">
+    <link rel="stylesheet" href="css/search">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/style3-bloodhaven.css">
 
 
     <style>
@@ -22,7 +24,7 @@
 
         .register-container h2 {
             text-align: center;
-            color: #ff8906;
+            color: #0088ff;
             margin-bottom: 25px;
             font-size: 24px;
         }
@@ -62,7 +64,7 @@
         }
 
         .form-footer a {
-            color: #ff8906;
+            color: #ff0606;
             text-decoration: none;
         }
 
@@ -71,6 +73,7 @@
         }
     </style>
 </head>
+
 <body>
     <header class="navbar">
         <a href="index.html" class="logo-link">
@@ -128,7 +131,8 @@
             </div>
 
             <div class="hero-buttons" style="margin-top: 25px;">
-                <button type="submit" class="btn primary" style="width: 100%; padding: 12px; cursor: pointer; border: none; background-color: #ff8906;">Register</button>
+                <button type="submit" class="btn primary"
+                    style="width: 100%; padding: 12px; cursor: pointer; border: none;">Register</button>
             </div>
         </form>
 
@@ -158,5 +162,33 @@
             navDropdown.classList.remove('active');
         });
     </script>
+
+    <!--Registering an Account-->
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Get existing users or create an empty array
+            let users = JSON.parse(localStorage.getItem('webcomics_users')) || [];
+
+            // Check if username already exists
+            if (users.some(u => u.username === username)) {
+                alert('Username already taken!');
+                return;
+            }
+
+            // Save new user
+            users.push({ username, email, password });
+            localStorage.setItem('webcomics_users', JSON.stringify(users));
+
+            alert('Account created successfully! Please log in.');
+            window.location.href = 'login.html'; // Redirect to your login page
+        });
+    </script>
 </body>
+
 </html>

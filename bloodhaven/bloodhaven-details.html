@@ -5,45 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BloodHaven - Details</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="search.css">
-    <link rel="stylesheet" href="style3-bloodhaven.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/search.css">
+    <link rel="stylesheet" href="../css/style3-bloodhaven.css">
 </head>
 
 <body>
     <header class="navbar">
-        <a href="index.html" class="logo-link">
-            <img src="img/image.png" alt="WebComics Logo" class="logo-img">
+        <a href="../index.html" class="logo-link">
+            <img src="../img/image.png" alt="WebComics Logo" class="logo-img">
             <span class="logo">Web<span>Comics</span></span>
         </a>
         <nav class="nav-links">
-            <a href="index.html#home"><img src="img/home.jpg"></a>
+            <a href="../index.html#home"><img src="../img/home.jpg"></a>
 
             <div class="dropdown" id="navDropdown">
                 <button class="dropdown-btn" id="iconDropdownBtn" type="button">
-                    <img src="img/menu.png" alt="Menu">
+                    <img src="../img/menu.png" alt="Menu">
                 </button>
                 <div class="dropdown-content" id="iconDropdownContent">
-                    <a href="bookmark.html">Bookmark</a>
-                    <a href="profile1.html#section1">Contact</a>
-                    <a href="register.html">Register</a>
+                    <a href="../bookmark.html">Bookmark</a>
+                    <a href="../profile1.html#section1">Contact</a>
+                    <a href="../register.html">Register</a>
                 </div>
             </div>
 
-            <a href="index.html#trending">Trending</a>
-            <a href="categories.html">Categories</a>
-            <a href="index.html#about">About</a>
+            <a href="../index.html#trending">Trending</a>
+            <a href="../categories.html">Categories</a>
+            <a href="../index.html#about">About</a>
         </nav>
         <div class="search-container" id="searchContainer">
             <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
             <button class="search-btn" id="searchBtn">
-                <img src="img/search.png" alt="Search">
+                <img src="../img/search.png" alt="Search">
             </button>
             <div class="search-dropdown" id="searchDropdown">
-                <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
-                <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
-                <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
-                <a href="mysterious.html" class="dropdown-item">Mysterious</a>
+                <a href="../bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
+                <a href="../Forestconnect.html" class="dropdown-item">Forest Connect</a>
+                <a href="../ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
+                <a href="../mysterious.html" class="dropdown-item">Mysterious</a>
             </div>
         </div>
     </header>
@@ -51,33 +51,36 @@
     <section class="comic-detail-hero">
         <div class="comic-detail-container">
             <div class="comic-cover">
-                <img src="img/UntitledHaven.jpg" alt="Haven Ark: Devil's Blood Cover">
+                <img src="../img/rickroll.png" alt="Haven Ark: Devil's Blood Cover">
             </div>
 
             <div class="comic-meta">
-                <h1>Haven Ark: Devil's Blood</h1>
+                <h1>Rickroll</h1>
                 <p class="comic-stats"><strong>Author/Creator: </strong> Tester <br> <strong> Artist:</strong>
                     Cabatingan &nbsp;|&nbsp; <strong>Chapters:</strong> 4</p>
 
                 <div class="description-box">
                     <h3>Synopsis</h3>
-                    <p>Lando Hyacinth reincarnated as a newborn baby named Agari Anarch born from Rakish'Khaos Clan.
-                        Thrown into a brutal world of dark fantasy called Eido, where he must navigate through deadly
-                        landscapes to survive his clan from great war.</p>
+                    <p>We're no strangers to love.
+                        You know the rules and so do I. <br>
+                        A full commitment's what I'm thinkin' of. <br>
+                        You wouldn't get this from any other guy.<br>
+                    </p>
                     <br>
                     <h3>Genre</h3>
-                    <p><em>Dark Fantasy</em></p>
-                    <p><em>Reincartion</em></p>
-                    <p><em>Action</em></p>
+                    <p><em>I just wanna tell you</em></p>
+                    <p><em>how I'm feeling </em></p>
+                    <p><em>Gotta make you understand</em></p>
                 </div>
 
                 <div class="hero-buttons">
-                    <a href="bloodhaven.html#chapters" class="btn primary">Start Reading</a>
-
-                    <a href="#" class="btn secondary bookmark-toggle">
-                        <img src="img/bookmark_24.png" alt="bookmark_24" class="btn-icon">
-                        <span class="btn-text">Bookmark</span>
-                    </a>
+                    <a href="../bloodhaven.html#chapters" id="youtube" class="btn primary">Start Reading</a>
+                    <script>
+                        document.getElementById('youtube').addEventListener('click', function(e) {
+                            e.preventDefault();
+                            window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1', '_blank');
+                        });
+                    </script>
                 </div>
             </div>
         </div>

@@ -5,16 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Haven Ark: Devil's Blood</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="search.css">
-    <link rel="stylesheet" href="style3-bloodhaven.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/style3-bloodhaven.css">
+    <link rel="stylesheet" href="css/comment.css">
 </head>
 
 <body>
     <header class="navbar">
         <a href="index.html" class="logo-link">
             <img src="img/image.png" alt="WebComics Logo" class="logo-img">
-            <span class ="logo">Web<span>Comics</span></span>
+            <span class="logo">Web<span>Comics</span></span>
         </a>
         <nav class="nav-links">
             <a href="index.html#home"><img src="img/home.jpg"></a>
@@ -26,7 +27,7 @@
                 <div class="dropdown-content" id="iconDropdownContent">
                     <a href="bookmark.html">Bookmark</a>
                     <a href="profile1.html#section1">Contact</a>
-                   <a href="register.html">Register</a>
+                    <a href="register.html">Register</a>
                 </div>
             </div>
 
@@ -34,6 +35,11 @@
             <a href="categories.html">Categories</a>
             <a href="index.html#about">About</a>
         </nav>
+
+        <a href="account.html" class="profile-icon-btn">
+            <img id="navUserIcon" src="img/people.png" alt="Account">
+        </a>
+
         <div class="search-container" id="searchContainer">
             <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
             <button class="search-btn" id="searchBtn">
@@ -42,7 +48,7 @@
             <div class="search-dropdown" id="searchDropdown">
                 <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
                 <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
-               <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
+                <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
                 <a href="mysterious.html" class="dropdown-item">Mysterious</a>
             </div>
         </div>
@@ -62,7 +68,8 @@
                 <div class="description-box">
                     <h3>Synopsis</h3>
                     <p>Lando Hyacinth reincarnated as a newborn baby named Agari Anarch born from Rakish'Khaos Clan.
-                       Thrown into a brutal world of dark fantasy called Eido, where he must navigate through deadly landscapes to survive his clan from great war.</p>
+                        Thrown into a brutal world of dark fantasy called Eido, where he must navigate through deadly
+                        landscapes to survive his clan from great war.</p>
                     <br>
                     <h3>Genre</h3>
                     <p><em>Dark Fantasy</em></p>
@@ -85,7 +92,7 @@
     <section id="chapters" class="section chapters-section">
         <h2>Chapters</h2>
         <div class="chapter-list">
-            <a href="bloodhavenchapter1.html" class="chapter-item">
+            <a href="bloodhaven/bloodhavenchapter1.html" class="chapter-item">
                 <div class="chapter-info">
                     <h4>Chapter 1: Reincarnation</h4>
                     <span class="chapter-date">Released: August 12, 2026</span>
@@ -93,6 +100,34 @@
                 <span class="read-btn">Read &rarr;</span>
             </a>
         </div>
+    </section>
+
+     <section class="comments-section">
+        <div class="comments-header">
+            <h3><span id="commentCount">0</span> comments</h3>
+        </div>
+
+        <form class="comment-form" id="commentForm">
+            <div class="form-user-icon" id="formUserAvatarContainer"
+                style="overflow: hidden; border-radius: 50%; width: 40px; height: 40px; background-color: #2e2f3e; display: flex; align-items: center; justify-content: center;">
+                <img id="commentFormAvatarImg" src="img/people.png" alt="Avatar"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <div class="form-input-container" style="flex-grow: 1; display: flex; flex-direction: column; gap: 10px;">
+                <input type="text" id="commentAuthor" placeholder="Your Name" autocomplete="off" style="display: none;">
+                <textarea id="commentText" placeholder="Share your thoughts about this chapter..." required
+                    style="width: 100%; min-height: 80px; background: #151417; border: 1px solid rgba(255,255,255,0.1); color: #fffffe; padding: 12px; border-radius: 8px; resize: vertical;"></textarea>
+
+                <div class="form-footer" style="display: flex; justify-content: flex-end;">
+                    <button type="submit"
+                        style="background: #0088ff; color: #fffffe; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Post
+                        Comment</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="commentsList"></div>
     </section>
 
     <script>
@@ -139,13 +174,144 @@
 
         navDropdown.addEventListener('click', function (e) {
             navDropdown.classList.toggle('active');
-            searchContainer.classList.remove('active'); 
+            searchContainer.classList.remove('active');
             e.stopPropagation();
         });
 
         document.addEventListener('click', function () {
             searchContainer.classList.remove('active');
             navDropdown.classList.remove('active');
+        });
+    </script>
+
+    <!--Comment Section-->
+    <!--Comment Section-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Pull Logged-in User Profile & Avatar Data
+        const loggedInUser = JSON.parse(localStorage.getItem('logged_in_user')) || {};
+        const savedAvatar = loggedInUser.avatar || "";
+        const username = loggedInUser.username || loggedInUser.name || "Reader";
+
+        const formAvatarImg = document.getElementById('commentFormAvatarImg');
+        if (formAvatarImg && savedAvatar) {
+            formAvatarImg.src = savedAvatar;
+        }
+
+        const commentForm = document.getElementById('commentForm');
+        const commentText = document.getElementById('commentText');
+        const commentsList = document.getElementById('commentsList');
+        const commentCount = document.getElementById('commentCount');
+
+        // 2. FIXED: Use a unique, permanent storage key strictly dedicated to Bloodhaven
+        const storageKey = 'webcomics_series_haven-ark-devils-blood_comments';
+
+        function loadComments() {
+            const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+            if (commentsList) commentsList.innerHTML = '';
+            if (commentCount) commentCount.textContent = savedComments.length;
+
+            if (savedComments.length === 0) {
+                commentsList.innerHTML = `<p style="color: #9ca3af; font-size: 14px;">No comments yet. Be the first to share your thoughts!</p>`;
+                return;
+            }
+
+            savedComments.forEach(c => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment-item';
+                commentDiv.style.display = 'flex';
+                commentDiv.style.gap = '15px';
+                commentDiv.style.marginBottom = '20px';
+
+                let avatarHTML = '';
+                if (c.avatar) {
+                    avatarHTML = `<div class="comment-avatar" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex-shrink: 0;"><img src="${c.avatar}" style="width: 100%; height: 100%; object-fit: cover;"></div>`;
+                } else {
+                    const initial = c.author ? c.author.charAt(0).toUpperCase() : '?';
+                    avatarHTML = `<div class="comment-avatar" style="width: 40px; height: 40px; border-radius: 50%; background: #ff8906; color: #0f0e17; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">${initial}</div>`;
+                }
+
+                commentDiv.innerHTML = `
+                    ${avatarHTML}
+                    <div class="comment-content" style="flex-grow: 1;">
+                        <div class="comment-header-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span class="comment-author" style="font-weight: bold; color: #ff8906;">${escapeHTML(c.author)}</span>
+                            <span class="comment-time" style="font-size: 12px; color: #7d82b5;">${c.time || 'Recently'}</span>
+                        </div>
+                        <div class="comment-text" style="color: #fffffe; line-height: 1.4;">${escapeHTML(c.text)}</div>
+                    </div>
+                `;
+                if (commentsList) commentsList.appendChild(commentDiv);
+            });
+        }
+
+        if (commentForm) {
+            commentForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                
+                // Ensure user is logged in before posting
+                if (!loggedInUser.username && !loggedInUser.email) {
+                    alert('Please log in to post a comment.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const textVal = commentText.value.trim();
+                if (!textVal) return;
+
+                // FIXED: Generate real timestamp locked to Asian Time Zone (e.g., Asia/Manila)
+                const now = new Date();
+                const timeZoneOption = { timeZone: 'Asia/Manila' };
+
+                const formattedTime = now.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric',
+                    ...timeZoneOption
+                }) + ', ' + now.toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    minute: '2-digit', 
+                    hour12: true,
+                    ...timeZoneOption
+                });
+
+                const newComment = {
+                    author: username,
+                    text: textVal,
+                    avatar: loggedInUser.avatar || "",
+                    time: formattedTime
+                };
+
+                const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+                savedComments.unshift(newComment);
+                localStorage.setItem(storageKey, JSON.stringify(savedComments));
+
+                commentText.value = '';
+                loadComments();
+            });
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g,
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        loadComments();
+    });
+</script>
+
+    <script>document.addEventListener('DOMContentLoaded', function () {
+            const savedAvatar = localStorage.getItem('user_avatar');
+            if (savedAvatar) {
+                const navIcon = document.getElementById('navUserIcon');
+                if (navIcon) {
+                    navIcon.src = savedAvatar;
+                    navIcon.style.borderRadius = '50%';
+                    navIcon.style.objectFit = 'cover';
+                }
+            }
         });
     </script>
 </body>

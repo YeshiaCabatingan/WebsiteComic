@@ -5,16 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Haven Ark: Devil's Blood</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="search.css">
-    <link rel="stylesheet" href="style3-bloodhaven.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/style3-bloodhaven.css">
+    <link rel="stylesheet" href="css/comment.css">
 </head>
 
 <body>
     <header class="navbar">
         <a href="index.html" class="logo-link">
             <img src="img/image.png" alt="WebComics Logo" class="logo-img">
-            <span class ="logo">Web<span>Comics</span></span>
+            <span class="logo">Web<span>Comics</span></span>
         </a>
         <nav class="nav-links">
             <a href="index.html#home"><img src="img/home.jpg"></a>
@@ -26,7 +27,7 @@
                 <div class="dropdown-content" id="iconDropdownContent">
                     <a href="bookmark.html">Bookmark</a>
                     <a href="profile1.html#section1">Contact</a>
-                   <a href="register.html">Register</a>
+                    <a href="register.html">Register</a>
                 </div>
             </div>
 
@@ -34,6 +35,11 @@
             <a href="categories.html">Categories</a>
             <a href="index.html#about">About</a>
         </nav>
+
+        <a href="account.html" class="profile-icon-btn">
+            <img id="navUserIcon" src="img/people.png" alt="Account">
+        </a>
+
         <div class="search-container" id="searchContainer">
             <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
             <button class="search-btn" id="searchBtn">
@@ -61,7 +67,8 @@
 
                 <div class="description-box">
                     <h3>Synopsis</h3>
-                    <p>An Alternate timeline from Forest Connect series.  This series is meant to be WHAT IF the otherworldly being does not enter the mirror of worlds.</p>
+                    <p>An Alternate timeline from Forest Connect series. This series is meant to be WHAT IF the
+                        otherworldly being does not enter the mirror of worlds.</p>
                     <br>
                     <h3>Genre</h3>
                     <p><em>Dark Fantasy</em></p>
@@ -91,6 +98,25 @@
                 <span class="read-btn">Read &rarr;</span>
             </a>
         </div>
+    </section>
+
+    <section class="comments-section">
+        <div class="comments-header">
+            <h3><span id="commentCount">0</span> comments</h3>
+        </div>
+
+        <form class="comment-form" id="commentForm">
+            <div class="form-user-icon"></div>
+            <div class="form-input-container">
+                <input type="text" id="commentAuthor" placeholder="Your Name" required autocomplete="off">
+                <textarea id="commentText" placeholder="Share your thoughts about this chapter..." required></textarea>
+                <div class="form-footer">
+                    <button type="submit">Post Comment</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="commentsList"></div>
     </section>
 
     <script>
@@ -137,7 +163,7 @@
 
         navDropdown.addEventListener('click', function (e) {
             navDropdown.classList.toggle('active');
-            searchContainer.classList.remove('active'); 
+            searchContainer.classList.remove('active');
             e.stopPropagation();
         });
 
@@ -145,6 +171,65 @@
             searchContainer.classList.remove('active');
             navDropdown.classList.remove('active');
         });
+    </script>
+
+    <script>
+        const commentForm = document.getElementById('commentForm');
+        const commentAuthor = document.getElementById('commentAuthor');
+        const commentText = document.getElementById('commentText');
+        const commentsList = document.getElementById('commentsList');
+        const commentCount = document.getElementById('commentCount');
+
+        const storageKey = 'forest_alternate_comments'; // Keep your unique key here
+
+        function loadComments() {
+            const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+            commentsList.innerHTML = '';
+            commentCount.textContent = savedComments.length;
+
+            savedComments.forEach(c => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment-item';
+
+                // Creates a circular initial letter avatar from the author's name
+                const initial = c.author ? c.author.charAt(0).toUpperCase() : '?';
+
+                commentDiv.innerHTML = `
+                <div class="comment-avatar">${initial}</div>
+                <div class="comment-content">
+                    <div class="comment-header-row">
+                        <span class="comment-author">${escapeHTML(c.author)}</span>
+                        <span class="comment-time">${c.time || 'Just now'}</span>
+                    </div>
+                    <div class="comment-text">${escapeHTML(c.text)}</div>
+                </div>
+            `;
+                commentsList.appendChild(commentDiv);
+            });
+        }
+
+        commentForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const newComment = {
+                author: commentAuthor.value.trim(),
+                text: commentText.value.trim(),
+                time: 'Just now'
+            };
+            const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
+            savedComments.unshift(newComment);
+            localStorage.setItem(storageKey, JSON.stringify(savedComments));
+            commentAuthor.value = '';
+            commentText.value = '';
+            loadComments();
+        });
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g,
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        loadComments();
     </script>
 </body>
 

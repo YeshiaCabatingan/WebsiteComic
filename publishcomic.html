@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publish Comic - WebComics</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style1-hero.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/style2-about&collab.css">
+</head>
+
+<body id="home">
+
+   <body id="home">
+
+    <header class="navbar">
+        <a href="index.html" class="logo-link">
+            <img src="img/image.png" alt="WebComics Logo" class="logo-img">
+            <span class="logo">Web<span>Comics</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html#home"><img src="img/home.jpg"></a>
+
+            <div class="dropdown" id="navDropdown">
+                <button class="dropdown-btn" id="iconDropdownBtn" type="button">
+                    <img src="img/menu.png" alt="Menu">
+                </button>
+                <div class="dropdown-content" id="iconDropdownContent">
+                    <a href="bookmark.html">Bookmark</a>
+                    <a href="profile1.html#section1">Contact</a>
+                    <a href="register.html">Register</a>
+                </div>
+            </div>
+
+            <a href="index.html#trending">Trending</a>
+            <a href="categories.html">Categories</a>
+            <a href="index.html#about">About</a>
+        </nav>
+        <div class="search-container" id="searchContainer">
+            <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
+            <button class="search-btn" id="searchBtn">
+                <img src="img/search.png" alt="Search">
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+                <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
+                <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
+                <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
+                <a href="mysterious.html" class="dropdown-item">Mysterious</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="section" style="max-width: 600px; margin: 40px auto; color: white;">
+        <h2>Publish a New Comic</h2>
+        <p style="color: #8c8f9c; margin-bottom: 20px;">Upload your artwork and details to display it on the trending page.</p>
+
+        <form id="publishForm" style="display: flex; flex-direction: column; gap: 15px;">
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Comic Title</label>
+                <input type="text" id="comicTitle" placeholder="Enter comic name..." required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
+            </div>
+
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Author / Creator Name</label>
+                <input type="text" id="comicAuthor" placeholder="Your name or username..." required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
+            </div>
+
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Synopsis / Description</label>
+                <textarea id="comicSynopsis" placeholder="What is your comic about?" required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px; min-height: 80px; resize: vertical;"></textarea>
+            </div>
+
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Cover Image</label>
+                <input type="file" id="comicFile" accept="image/*" required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
+            </div>
+
+            <button type="submit" class="btn primary" style="padding: 10px; cursor: pointer; border: none; font-weight: bold; border-radius: 6px;">Publish Comic</button>
+        </form>
+    </main>
+
+     <script>
+        const searchContainer = document.getElementById('searchContainer');
+        const navDropdown = document.getElementById('navDropdown');
+
+        searchContainer.addEventListener('click', function (e) {
+            searchContainer.classList.toggle('active');
+            navDropdown.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        navDropdown.addEventListener('click', function (e) {
+            navDropdown.classList.toggle('active');
+            searchContainer.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', function () {
+            searchContainer.classList.remove('active');
+            navDropdown.classList.remove('active');
+        });
+    </script>
+
+    <script>
+        // Ensure user is logged in
+        const loggedInUser = JSON.parse(localStorage.getItem('logged_in_user'));
+        if (!loggedInUser) {
+            alert('Please log in to publish a comic.');
+            window.location.href = 'login.html';
+        }
+
+        const publishForm = document.getElementById('publishForm');
+        const comicTitleInput = document.getElementById('comicTitle');
+        const comicSynopsisInput = document.getElementById('comicSynopsis');
+        const comicFileInput = document.getElementById('comicFile');
+
+        publishForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const file = comicFileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const base64Image = event.target.result;
+
+                const newComic = {
+                    id: 'comic_' + Date.now(), // Unique ID used for tracking and chapter management
+                    title: comicTitleInput.value.trim(),
+                    author: loggedInUser.username, // Automatically secured from login session
+                    synopsis: comicSynopsisInput.value.trim(),
+                    cover: base64Image,
+                    chapters: [] // Starts completely empty—chapters are managed later in edit-comic.html
+                };
+
+                // Save to webcomics_list so account.html and details pages can read it
+                let allComics = JSON.parse(localStorage.getItem('webcomics_list')) || [];
+                allComics.unshift(newComic);
+                localStorage.setItem('webcomics_list', JSON.stringify(allComics));
+
+                alert('Comic published successfully!');
+                window.location.href = 'account.html'; // Redirect to dashboard
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+
+</html>
