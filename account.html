@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - WebComics</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/search.css">
+    <script src="js/profile-avatar.js" defer></script>
+    <script src="js/search.js" defer></script>
+    <style>
+        body {
+            background:
+                radial-gradient(ellipse at 12% 5%, rgba(0, 136, 255, 0.12), transparent 35rem),
+                radial-gradient(ellipse at 90% 25%, rgba(174, 0, 255, 0.08), transparent 32rem),
+                #0f0e17;
+            min-height: 100vh;
+        }
+
+        .account-shell {
+            width: min(1200px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 132px 0 64px;
+        }
+
+        .account-profile {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(120deg, rgba(30, 42, 69, 0.98), rgba(22, 22, 39, 0.98) 60%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            padding: clamp(26px, 5vw, 44px);
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+        }
+
+        .account-profile::after {
+            position: absolute;
+            content: "";
+            width: 260px;
+            height: 260px;
+            right: -95px;
+            top: -135px;
+            border-radius: 50%;
+            background: rgba(0, 136, 255, 0.12);
+            filter: blur(2px);
+            pointer-events: none;
+        }
+
+        .profile-card {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-identity {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            min-width: 0;
+        }
+
+        .avatar-box {
+            flex: 0 0 96px;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(145deg, #0088ff, #ae00ff 55%, #ff8906);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32), 0 0 0 6px rgba(255, 255, 255, 0.04);
+        }
+
+        .avatar-box img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .avatar-box.has-custom-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: none;
+        }
+
+        .avatar-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar-change-btn,
+        .avatar-remove-btn {
+            border: 0;
+            background: transparent;
+            color: #a9d8ff;
+            font: inherit;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 6px;
+        }
+
+        .avatar-change-btn:hover,
+        .avatar-remove-btn:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .avatar-remove-btn {
+            color: #ff9385;
+        }
+
+        .avatar-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .avatar-input {
+            display: none;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #71bcff;
+            margin-bottom: 7px;
+        }
+
+        .profile-card h1 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            line-height: 1.12;
+            color: #fffffe;
+            margin: 0 0 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-card p {
+            color: #bdc6df;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            border: none;
+            border-radius: 11px;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+        }
+
+        .btn:focus-visible,
+        .mini-btn:focus-visible {
+            outline: 3px solid rgba(113, 188, 255, 0.8);
+            outline-offset: 3px;
+        }
+
+        .btn:hover,
+        .mini-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #0088ff, #386bff);
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 136, 255, 0.2);
+        }
+
+        .btn.primary:hover {
+            box-shadow: 0 10px 25px rgba(0, 136, 255, 0.32);
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.07);
+            color: #fffffe;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, rgba(27, 31, 50, 0.96), rgba(19, 23, 38, 0.96));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px 22px;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: clamp(1.8rem, 3vw, 2.2rem);
+            line-height: 1;
+            color: #fffffe;
+            margin-bottom: 9px;
+        }
+
+        .stat-card span {
+            color: #aeb8d2;
+            font-size: 0.84rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .panel {
+            background: rgba(22, 22, 39, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 20px;
+            padding: clamp(20px, 3vw, 30px);
+            margin-top: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.16);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            color: #fffffe;
+            font-size: clamp(1.35rem, 2.5vw, 1.7rem);
+            letter-spacing: -0.02em;
+        }
+
+        .comic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+            gap: 20px;
+        }
+
+        .comic-card {
+            background: #131927;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .comic-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(113, 188, 255, 0.32);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.24);
+        }
+
+        .card-img {
+            height: 190px;
+            flex: 0 0 190px;
+            background-color: #20283a;
+            background-image: linear-gradient(135deg, rgba(0, 136, 255, 0.1), rgba(174, 0, 255, 0.08));
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .card-info {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+            flex: 1;
+        }
+
+        .card-info h3 {
+            color: #fffffe;
+            margin: 0;
+            font-size: 1.08rem;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+        }
+
+        .card-info p {
+            color: #aeb8d2;
+            margin: 0;
+            line-height: 1.5;
+            font-size: 0.9rem;
+            overflow-wrap: anywhere;
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            color: #aeb8d2;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .meta-row span:last-child {
+            color: #ffb454;
+            background: rgba(255, 137, 6, 0.1);
+            border: 1px solid rgba(255, 137, 6, 0.18);
+            border-radius: 999px;
+            padding: 4px 9px;
+        }
+
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: auto;
+            padding-top: 2px;
+        }
+
+        .mini-btn {
+            border: 1px solid transparent;
+            border-radius: 9px;
+            padding: 9px 13px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .mini-btn.primary {
+            background: #0088ff;
+        }
+
+        .mini-btn.secondary {
+            background: #292e40;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .mini-btn.danger {
+            background: rgba(192, 57, 43, 0.16);
+            border-color: rgba(255, 99, 71, 0.3);
+            color: #ff9385;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: clamp(32px, 6vw, 56px) 20px;
+            border: 1px dashed rgba(255, 255, 255, 0.18);
+            border-radius: 16px;
+            background: rgba(17, 24, 39, 0.45);
+            color: #aeb8d2;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 10px;
+            color: #fffffe;
+        }
+
+        @media (max-width: 760px) {
+            .account-shell {
+                width: min(100% - 32px, 560px);
+                padding-top: 116px;
+            }
+
+            .profile-identity {
+                align-items: flex-start;
+                gap: 18px;
+            }
+
+            .avatar-box {
+                flex-basis: 76px;
+                width: 76px;
+                height: 76px;
+            }
+
+            .avatar-box img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .avatar-control {
+                flex-shrink: 0;
+            }
+
+            .profile-actions,
+            .profile-actions .btn {
+                width: 100%;
+            }
+
+            .profile-actions .btn {
+                flex: 1 1 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 16px 18px;
+            }
+
+            .stat-card strong {
+                font-size: 1.7rem;
+                margin-bottom: 5px;
+            }
+
+            .panel-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .panel-header .btn {
+                width: 100%;
+            }
+
+            .card-img {
+                height: 210px;
+                flex-basis: 210px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .account-shell {
+                width: calc(100% - 24px);
+                padding-top: 108px;
+            }
+
+            .account-profile {
+                padding: 22px 18px;
+            }
+
+            .profile-identity {
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+            }
+
+            .panel {
+                padding: 18px 14px;
+            }
+
+            .action-row .mini-btn {
+                flex: 1 1 auto;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <a href="index.html" class="logo-link">
+            <img src="img/image.png" alt="WebComics Logo" class="logo-img">
+            <span class="logo">Web<span>Comics</span></span>
+        </a>
+        <nav class="nav-links">
+            <a href="index.html#home"><img src="img/home.jpg" alt="Home"></a>
+
+            <div class="dropdown" id="navDropdown">
+                <button class="dropdown-btn" id="iconDropdownBtn" type="button">
+                    <img src="img/menu.png" alt="Menu">
+                </button>
+                <div class="dropdown-content" id="iconDropdownContent">
+                    <a href="bookmark.html">Bookmark</a>
+                    <a href="profile1.html#section1">Contact</a>
+                    <a href="register.html">Register</a>
+                </div>
+            </div>
+
+            <a href="index.html#trending">Trending</a>
+            <a href="categories.html">Categories</a>
+            <a href="index.html#about">About</a>
+        </nav>
+
+        <a href="account.html" class="profile-icon-btn" aria-label="Account page">
+            <img id="navUserIcon" src="img/people.png" alt="Account">
+        </a>
+
+        <div class="search-container" id="searchContainer">
+            <input type="text" placeholder="Search anime..." class="search-input" id="searchInput" autocomplete="off">
+            <button class="search-btn" id="searchBtn" type="button">
+                <img src="img/search.png" alt="Search">
+            </button>
+            <div class="search-dropdown" id="searchDropdown">
+                <a href="bloodhaven.html" class="dropdown-item">Haven Ark: Devil's Blood</a>
+                <a href="Forestconnect.html" class="dropdown-item">Forest Connect</a>
+                <a href="ForestAlternate.html" class="dropdown-item">Connect Alternate World</a>
+                <a href="mysterious.html" class="dropdown-item">Mysterious</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="account-shell">
+        <section class="account-profile">
+            <div class="profile-card">
+                <div class="profile-identity">
+                    <div class="avatar-control">
+                        <div class="avatar-box" id="avatarBox">
+                            <img id="accountAvatar" src="img/people.png" alt="Profile avatar">
+                        </div>
+                        <div class="avatar-actions">
+                            <button id="changeAvatarBtn" class="avatar-change-btn" type="button">Change photo</button>
+                            <button id="removeAvatarBtn" class="avatar-remove-btn" type="button" hidden>Remove</button>
+                        </div>
+                        <input id="avatarInput" class="avatar-input" type="file" accept="image/*" aria-label="Choose profile photo">
+                    </div>
+                    <div>
+                        <span class="eyebrow">Profile</span>
+                        <h1 id="accountName">Your Account</h1>
+                        <p id="accountMeta">Loading profile...</p>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <a href="publishcomic.html" class="btn primary">Publish Comic</a>
+                    <button id="logoutBtn" class="btn secondary" type="button">Log Out</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Account stats">
+            <div class="stat-card">
+                <strong id="publishedCount">0</strong>
+                <span>Published</span>
+            </div>
+            <div class="stat-card">
+                <strong id="chapterCount">0</strong>
+                <span>Chapters</span>
+            </div>
+            <div class="stat-card">
+                <strong id="statusCount">Online</strong>
+                <span>Account Status</span>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <h2>My Comics</h2>
+                <a href="publishcomic.html" class="btn secondary" style="text-decoration: none;">+ New Comic</a>
+            </div>
+            <div id="userComicsGrid" class="comic-grid"></div>
+        </section>
+    </main>
+
+    <script>
+        const searchContainer = document.getElementById('searchContainer');
+        const navDropdown = document.getElementById('navDropdown');
+
+        searchContainer.addEventListener('click', function (e) {
+            searchContainer.classList.toggle('active');
+            navDropdown.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        navDropdown.addEventListener('click', function (e) {
+            navDropdown.classList.toggle('active');
+            searchContainer.classList.remove('active');
+            e.stopPropagation();
+        });
+
+        document.addEventListener('click', function () {
+            searchContainer.classList.remove('active');
+            navDropdown.classList.remove('active');
+        });
+
+        const user = JSON.parse(localStorage.getItem('logged_in_user')) || JSON.parse(localStorage.getItem('current_user_profile'));
+
+        if (!user) {
+            alert('Please log in to view your account.');
+            window.location.href = 'login.html';
+        }
+
+        const safeUserName = user?.username || user?.name || 'Comic Creator';
+        const safeUserEmail = user?.email || 'No email added';
+        document.getElementById('accountName').textContent = safeUserName;
+        document.getElementById('accountMeta').textContent = safeUserEmail;
+
+        const avatarBox = document.getElementById('avatarBox');
+        const accountAvatar = document.getElementById('accountAvatar');
+        const avatarInput = document.getElementById('avatarInput');
+        const removeAvatarBtn = document.getElementById('removeAvatarBtn');
+        const defaultAvatar = 'img/people.png';
+
+        function displayAvatar(avatar) {
+            const hasAvatar = Boolean(avatar);
+            accountAvatar.src = hasAvatar ? avatar : defaultAvatar;
+            accountAvatar.alt = hasAvatar ? `${safeUserName}'s profile photo` : 'Default profile avatar';
+            avatarBox.classList.toggle('has-custom-avatar', hasAvatar);
+            removeAvatarBtn.hidden = !hasAvatar;
+
+            const navUserIcon = document.getElementById('navUserIcon');
+            if (navUserIcon) {
+                navUserIcon.src = hasAvatar ? avatar : defaultAvatar;
+                navUserIcon.style.borderRadius = '50%';
+                navUserIcon.style.objectFit = 'cover';
+            }
+        }
+
+        function matchesCurrentUser(candidate) {
+            if (!candidate) return false;
+            const currentUsername = (user.username || user.name || '').toLowerCase();
+            const candidateUsername = (candidate.username || candidate.name || '').toLowerCase();
+            const currentEmail = (user.email || '').toLowerCase();
+            const candidateEmail = (candidate.email || '').toLowerCase();
+            return (currentUsername && currentUsername === candidateUsername)
+                || (currentEmail && currentEmail === candidateEmail);
+        }
+
+        function saveAvatar(avatar) {
+            try {
+                const updatedUser = { ...user, avatar: avatar || '' };
+                const loggedInUser = JSON.parse(localStorage.getItem('logged_in_user'));
+                const currentProfile = JSON.parse(localStorage.getItem('current_user_profile'));
+                const storedUsers = JSON.parse(localStorage.getItem('webcomics_users')) || [];
+
+                if (!Array.isArray(storedUsers)) {
+                    throw new Error('Saved account data is invalid.');
+                }
+
+                const updatedUsers = storedUsers.map(account =>
+                    matchesCurrentUser(account) ? { ...account, avatar: avatar || '' } : account
+                );
+
+                if (loggedInUser && matchesCurrentUser(loggedInUser)) {
+                    localStorage.setItem('logged_in_user', JSON.stringify(updatedUser));
+                }
+                if (currentProfile && matchesCurrentUser(currentProfile)) {
+                    localStorage.setItem('current_user_profile', JSON.stringify(updatedUser));
+                }
+                if (localStorage.getItem('webcomics_users') !== null) {
+                    localStorage.setItem('webcomics_users', JSON.stringify(updatedUsers));
+                }
+                if (avatar) {
+                    localStorage.setItem('user_avatar', avatar);
+                } else {
+                    localStorage.removeItem('user_avatar');
+                }
+
+                Object.assign(user, updatedUser);
+                displayAvatar(avatar);
+                return true;
+            } catch (error) {
+                console.error('Unable to save the profile photo.', error);
+                alert('Your profile photo could not be saved. Browser storage may be full. Please try a smaller image.');
+                return false;
+            }
+        }
+
+        displayAvatar(user.avatar || localStorage.getItem('user_avatar') || '');
+        document.getElementById('changeAvatarBtn').addEventListener('click', function () {
+            avatarInput.click();
+        });
+
+        avatarInput.addEventListener('change', function () {
+            const file = avatarInput.files && avatarInput.files[0];
+            avatarInput.value = '';
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Please choose an image file.');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                alert('Please choose an image smaller than 10 MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onerror = function () {
+                alert('The selected image could not be read. Please try another file.');
+            };
+            reader.onload = function () {
+                const image = new Image();
+                image.onerror = function () {
+                    alert('The selected file is not a valid image. Please choose another file.');
+                };
+                image.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const maxDimension = 320;
+                    const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
+                    canvas.width = Math.max(1, Math.round(image.width * scale));
+                    canvas.height = Math.max(1, Math.round(image.height * scale));
+
+                    const context = canvas.getContext('2d');
+                    if (!context) {
+                        alert('Your browser could not process this image.');
+                        return;
+                    }
+
+                    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    const compressedAvatar = canvas.toDataURL('image/jpeg', 0.82);
+                    saveAvatar(compressedAvatar);
+                };
+                image.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        removeAvatarBtn.addEventListener('click', function () {
+            if (window.confirm('Remove your profile photo?')) {
+                saveAvatar('');
+            }
+        });
+
+        const allComics = JSON.parse(localStorage.getItem('webcomics_list')) || [];
+        const myComics = allComics.filter(comic => {
+            const author = comic.author || '';
+            return author.toLowerCase() === safeUserName.toLowerCase();
+        });
+
+        const publishedCount = document.getElementById('publishedCount');
+        const chapterCount = document.getElementById('chapterCount');
+        const userComicsGrid = document.getElementById('userComicsGrid');
+
+        publishedCount.textContent = String(myComics.length);
+        chapterCount.textContent = String(myComics.reduce((sum, comic) => sum + (Array.isArray(comic.chapters) ? comic.chapters.length : 0), 0));
+
+        function renderComics() {
+            if (!myComics.length) {
+                userComicsGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3>No comics published yet</h3>
+                        <p>Start by creating your first comic and share it with the community.</p>
+                        <div style="margin-top: 18px;">
+                            <a href="publishcomic.html" class="btn primary" style="text-decoration: none;">Publish Your First Comic</a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            userComicsGrid.innerHTML = myComics.map(comic => {
+                const chapterTotal = Array.isArray(comic.chapters) ? comic.chapters.length : 0;
+                const image = comic.cover || 'img/Untitled.png';
+                const synopsis = comic.synopsis || 'No synopsis available yet.';
+
+                return `
+                    <article class="comic-card">
+                        <div class="card-img" style="background-image: url('${image}');"></div>
+                        <div class="card-info">
+                            <h3>${comic.title || 'Untitled Comic'}</h3>
+                            <p>${synopsis}</p>
+                            <div class="meta-row">
+                                <span>${chapterTotal} chapters</span>
+                                <span>${comic.status || 'Draft'}</span>
+                            </div>
+                            <div class="action-row">
+                                <button class="mini-btn primary" type="button" data-action="read" data-id="${comic.id || ''}">Read</button>
+                                <button class="mini-btn secondary" type="button" data-action="edit" data-id="${comic.id || ''}">Edit</button>
+                                <button class="mini-btn danger" type="button" data-action="delete" data-id="${comic.id || ''}">Delete</button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            document.querySelectorAll('[data-action]').forEach(button => {
+                button.addEventListener('click', function () {
+                    const action = this.dataset.action;
+                    const comicId = this.dataset.id;
+
+                    if (action === 'read') {
+                        localStorage.setItem('selected_comic_id', comicId);
+                        window.location.href = 'read.html';
+                        return;
+                    }
+
+                    if (action === 'edit') {
+                        localStorage.setItem('editing_comic_id', comicId);
+                        window.location.href = 'edit-comic.html';
+                        return;
+                    }
+
+                    if (action === 'delete') {
+                        const confirmed = window.confirm('Delete this comic from your account?');
+                        if (!confirmed) return;
+
+                        const updatedComics = allComics.filter(comic => (comic.id || '') !== comicId);
+                        localStorage.setItem('webcomics_list', JSON.stringify(updatedComics));
+                        window.location.reload();
+                    }
+                });
+            });
+        }
+
+        renderComics();
+
+        document.getElementById('logoutBtn').addEventListener('click', function () {
+            localStorage.removeItem('logged_in_user');
+            localStorage.removeItem('current_user_profile');
+            localStorage.removeItem('user_avatar');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+
+</html>

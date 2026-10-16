@@ -7,6 +7,9 @@
     <title>Document</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/search.css">
+    <script src="js/profile-avatar.js" defer></script>
+    <script src="js/bookmarks.js" defer></script>
+    <script src="js/search.js" defer></script>
     <link rel="stylesheet" href="css/style3-bloodhaven.css">
     <link rel="stylesheet" href="css/comment.css">
 </head>
@@ -110,7 +113,7 @@
         <form class="comment-form" id="commentForm">
             <div class="form-user-icon" id="formUserAvatarContainer"
                 style="overflow: hidden; border-radius: 50%; width: 40px; height: 40px; background-color: #2e2f3e; display: flex; align-items: center; justify-content: center;">
-                <img id="commentFormAvatarImg" src="img/people.png" alt="Avatar"
+                <img id="commentFormAvatarImg" src="img/people.png" data-default-avatar="img/people.png" alt="Avatar"
                     style="width: 100%; height: 100%; object-fit: cover;">
             </div>
 
@@ -129,38 +132,6 @@
 
         <div id="commentsList"></div>
     </section>
-
-    <script>
-        const bookmarkBtn = document.querySelector('.bookmark-toggle');
-
-        if (bookmarkBtn) {
-
-            const comicId = "haven-ark-devils-blood";
-            const isBookmarked = localStorage.getItem(`bookmark_${comicId}`) === 'true';
-
-            const icon = bookmarkBtn.querySelector('.btn-icon');
-
-            if (isBookmarked) {
-                bookmarkBtn.classList.add('bookmarked-green');
-                icon.src = 'img/bookmark_check.png';
-            }
-
-            bookmarkBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                this.classList.toggle('bookmarked-green');
-
-                const currentlyBookmarked = this.classList.contains('bookmarked-green');
-
-                if (currentlyBookmarked) {
-                    icon.src = 'img/bookmark_check.png';
-                    localStorage.setItem(`bookmark_${comicId}`, 'true');
-                } else {
-                    icon.src = 'img/bookmark_24.png';
-                    localStorage.setItem(`bookmark_${comicId}`, 'false');
-                }
-            });
-        }
-    </script>
 
     <script>
         const searchContainer = document.getElementById('searchContainer');

@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Bookmarks - WebComics</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/search.css">
+    <script src="js/profile-avatar.js" defer></script>
+    <script src="js/bookmarks.js" defer></script>
+    <script src="js/search.js" defer></script>
     <link rel="stylesheet" href="css/stylechapter.css">
 </head>
 <style>
@@ -49,8 +52,12 @@
         overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.08);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        text-decoration: none;
+        position: relative;
+    }
+
+    .bookmark-card-link {
         display: block;
+        text-decoration: none;
     }
 
     .card:hover {
@@ -80,11 +87,28 @@
         color: #7d82b5;
     }
 
+    .remove-bookmark {
+        margin: 0 15px 15px;
+        padding: 8px 12px;
+        border: 1px solid rgba(255, 137, 6, 0.3);
+        border-radius: 6px;
+        background: rgba(255, 137, 6, 0.12);
+        color: #ffb454;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .remove-bookmark:hover {
+        background: #ff8906;
+        color: #121629;
+    }
+
     .empty-message {
         text-align: center;
         color: #7d82b5;
-        margin-top: 50px;
+        margin: 50px auto;
         font-size: 16px;
+        grid-column: 1 / -1;
     }
 </style>
 
@@ -102,7 +126,7 @@
                     <img src="img/menu.png" alt="Menu">
                 </button>
                 <div class="dropdown-content" id="iconDropdownContent">
-                    <a href="Bookmark.html#home">Bookmark</a>
+                    <a href="bookmark.html">Bookmark</a>
                     <a href="profile1.html#section1">Contact</a>
                     <a href="register.html">Register</a>
                 </div>
@@ -137,23 +161,7 @@
             <p>Quick access to your saved comics and web novels</p>
         </div>
 
-        <div class="cards-grid">
-            <a href="bloodhaven.html" class="card">
-                <img src="img/HavenArk_DevilsBlood.jpg" alt="Haven Ark: Devil's Blood">
-                <div class="card-info">
-                    <h3>Haven Ark: Devil's Blood</h3>
-                    <p>Comic - Chapter 1</p>
-                </div>
-            </a>
-
-            <a href="Forestconnect.html" class="card">
-                <img src="img/Untitled.png" alt="Forest Connect">
-                <div class="card-info">
-                    <h3>Forest Connect</h3>
-                    <p>Web Novel - Chapter 1</p>
-                </div>
-            </a>
-        </div>
+        <div class="cards-grid" id="bookmarkGrid" aria-live="polite"></div>
     </main>
     <script>
         const searchContainer = document.getElementById('searchContainer');

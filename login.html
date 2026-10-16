@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/search.css">
     <link rel="stylesheet" href="css/style3-bloodhaven.css">
+    <script src="js/search.js" defer></script>
     <style>
         .login-container {
             max-width: 450px;
@@ -187,6 +188,11 @@
             if (validUser) {
                 // Set the active session
                 localStorage.setItem('logged_in_user', JSON.stringify(validUser));
+                if (validUser.avatar) {
+                    localStorage.setItem('user_avatar', validUser.avatar);
+                } else {
+                    localStorage.removeItem('user_avatar');
+                }
                 alert(`Welcome back, ${validUser.username}!`);
                 window.location.href = 'index.html'; // Redirect to home or account page
             } else {
