@@ -78,12 +78,12 @@
 
 <body>
     <div class="edit-container">
-        <h1>Edit Comic & Chapters</h1>
-        <p style="color: #a7a9be; margin-bottom: 25px;">Update your comic details or add new chapters.</p>
+        <h1 id="editHeading">Edit Comic & Chapters</h1>
+        <p style="color: #a7a9be; margin-bottom: 25px;">Update your work details or add new chapters.</p>
 
         <form id="editComicForm">
             <div class="form-group">
-                <label for="comicTitle">Comic Title</label>
+                <label for="comicTitle" id="editTitleLabel">Comic Title</label>
                 <input type="text" id="comicTitle" required>
             </div>
 
@@ -94,7 +94,7 @@
 
             <!-- Chapter Management Section -->
             <div class="chapter-section">
-                <h3>Chapters</h3>
+                <h3 id="chaptersHeading">Chapters</h3>
                 <div id="chaptersList" style="margin-bottom: 15px; color: #a7a9be;">
                     <!-- Existing chapters will display here -->
                 </div>
@@ -102,7 +102,11 @@
                     <label for="newChapterTitle">Add New Chapter Title / Number</label>
                     <input type="text" id="newChapterTitle" placeholder="e.g., Chapter 1: The Beginning">
                 </div>
-                <div class="form-group" style="margin-top: 20px;">
+                <div class="form-group" id="novelChapterGroup" style="margin-top: 20px; display: none;">
+                    <label for="newChapterContent">Chapter Text</label>
+                    <textarea id="newChapterContent" placeholder="Write or paste your chapter here..." style="height: 300px;"></textarea>
+                </div>
+                <div class="form-group" id="comicPagesGroup" style="margin-top: 20px;">
                     <label>Add Chapter Pages (One by One)</label>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <input type="file" id="singlePageInput" accept="image/*"
@@ -138,13 +142,20 @@
 
         // Temporary staging array for pages of the chapter currently being created
         let stagingPages = [];
+        let isNovel = false;
 
         document.addEventListener('DOMContentLoaded', function () {
             if (!comic) {
-                alert('Comic not found!');
+                alert('Work not found!');
                 window.location.href = 'account.html';
                 return;
             }
+
+            isNovel = comic.type === 'novel';
+            document.getElementById('editHeading').textContent = isNovel ? 'Edit Web Novel & Chapters' : 'Edit Comic & Chapters';
+            document.getElementById('editTitleLabel').textContent = isNovel ? 'Novel Title' : 'Comic Title';
+            document.getElementById('novelChapterGroup').style.display = isNovel ? 'block' : 'none';
+            document.getElementById('comicPagesGroup').style.display = isNovel ? 'none' : 'block';
 
             // Populate form fields with current comic data
             document.getElementById('comicTitle').value = comic.title || '';
@@ -161,7 +172,7 @@
             }
             container.innerHTML = comic.chapters.map((ch, index) => `
                 <div style="background: #1a1b26; padding: 10px; margin-bottom: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
-                    <span>${ch.title} (${ch.pages ? ch.pages.length : 0} pages)</span>
+                    <span>${ch.title} (${isNovel ? `${(ch.content || '').trim().split(/\\s+/).filter(Boolean).length} words` : `${ch.pages ? ch.pages.length : 0} pages`})</span>
                     <button type="button" onclick="deleteChapter(${index})" style="background: #ff4d4d; color: white; padding: 4px 8px; font-size: 12px; border-radius: 4px; border: none; cursor: pointer;">Delete</button>
                 </div>
             `).join('');
@@ -169,6 +180,7 @@
 
         // Handle uploading a single page and adding it to the staging list
         document.getElementById('addPageBtn').addEventListener('click', function () {
+            if (isNovel) return;
             const fileInput = document.getElementById('singlePageInput');
             const file = fileInput.files[0];
 
@@ -245,23 +257,34 @@
         document.getElementById('addChapterBtn').addEventListener('click', function () {
             const chapterTitleInput = document.getElementById('newChapterTitle');
             const title = chapterTitleInput.value.trim();
+            const contentInput = document.getElementById('newChapterContent');
+            const content = contentInput.value.trim();
 
             if (!title) {
                 alert('Please enter a chapter title/number first.');
                 return;
             }
 
-            if (stagingPages.length === 0) {
+            if (isNovel && !content) {
+                alert('Please write the chapter text first.');
+                return;
+            }
+
+            if (!isNovel && stagingPages.length === 0) {
                 alert('Please add at least one page image using the "+ Add Page" button.');
                 return;
             }
 
-            // Create the final chapter object containing page array
             const newChapter = {
                 title: title,
-                pages: [...stagingPages], // Copy sequenced pages array
                 date: new Date().toLocaleDateString()
             };
+            if (isNovel) {
+                newChapter.content = content;
+                contentInput.value = '';
+            } else {
+                newChapter.pages = [...stagingPages];
+            }
 
             // Push to current comic's chapter list
             comic.chapters = comic.chapters || [];
@@ -290,13 +313,19 @@
             // but forgot to click "+ Add Chapter", save it automatically on submit!
             const titleInput = document.getElementById('newChapterTitle');
             const title = titleInput.value.trim();
+            const contentInput = document.getElementById('newChapterContent');
+            const content = contentInput.value.trim();
 
-            if (title && stagingPages.length > 0) {
+            if (title && (isNovel ? content : stagingPages.length > 0)) {
                 const autoChapter = {
                     title: title,
-                    pages: [...stagingPages],
                     date: new Date().toLocaleDateString()
                 };
+                if (isNovel) {
+                    autoChapter.content = content;
+                } else {
+                    autoChapter.pages = [...stagingPages];
+                }
                 comic.chapters = comic.chapters || [];
                 comic.chapters.push(autoChapter);
             }

@@ -66,6 +66,7 @@
             <div class="comic-meta">
                 <h1 id="comicTitle">Haven Ark: Devil's Blood</h1>
                 <p class="comic-stats">
+                    <strong>Type:</strong> <span id="comicType">Web Comic</span><br>
                     <strong>Author/Creator: </strong> <span id="comicAuthor">Tester</span> <br>
                     <strong>Chapters:</strong> <span id="comicChaptersCount">1</span>
                 </p>
@@ -147,6 +148,9 @@
 
             const comicAuthor = document.getElementById('comicAuthor');
             if (comicAuthor) comicAuthor.textContent = activeComic.author || 'Creator';
+            const isNovel = activeComic.type === 'novel';
+            const comicType = document.getElementById('comicType');
+            if (comicType) comicType.textContent = isNovel ? 'Web Novel' : 'Web Comic';
 
             // Populate cover image (supporting both 'cover' and 'image' keys)
             const coverSource = activeComic.cover || activeComic.image;
@@ -158,19 +162,18 @@
             // Populate synopsis and genre
             const descriptionBox = document.querySelector('.description-box');
             if (descriptionBox) {
-                descriptionBox.innerHTML = `
-                <h3>Synopsis</h3>
-                <p>${activeComic.synopsis || 'No synopsis provided.'}</p>
-                <br>
-                <h3>Genre</h3>
-                <p><em>Community Upload</em></p>
-            `;
+                descriptionBox.innerHTML = '<h3>Synopsis</h3><p></p><br><h3>Genre</h3><p></p>';
+                const descriptionParagraphs = descriptionBox.querySelectorAll('p');
+                descriptionParagraphs[0].textContent = activeComic.synopsis || 'No synopsis provided.';
+                descriptionParagraphs[1].textContent = activeComic.genre || 'Unspecified';
             }
 
             const chapterCountElem = document.getElementById('chapterCountDisplay');
             if (chapterCountElem) {
                 chapterCountElem.textContent = activeComic.chapters ? activeComic.chapters.length : 0;
             }
+            const comicChaptersCount = document.getElementById('comicChaptersCount');
+            if (comicChaptersCount) comicChaptersCount.textContent = activeComic.chapters ? activeComic.chapters.length : 0;
 
             const chapterListContainer = document.querySelector('.chapter-list');
             if (chapterListContainer) {
@@ -179,13 +182,14 @@
                 if (chapters.length === 0) {
                     chapterListContainer.innerHTML = `
                     <p style="color: #9ca3af; padding: 20px; text-align: center;">
-                        No chapters added yet. Go to your dashboard to edit this comic and add chapters!
+                        No chapters added yet. Go to your dashboard to edit this ${isNovel ? 'novel' : 'comic'} and add chapters!
                     </p>
                 `;
                 } else {
                     chapterListContainer.innerHTML = '';
                     chapters.forEach((chapter, index) => {
                         const pageCount = chapter.pages ? chapter.pages.length : 0;
+                        const wordCount = (chapter.content || '').trim().split(/\s+/).filter(Boolean).length;
                         const chapterItem = document.createElement('a');
                         chapterItem.href = `read.html?chapter=${index}`;
                         chapterItem.className = 'chapter-item';
@@ -194,7 +198,7 @@
                         chapterItem.innerHTML = `
                         <div class="chapter-info">
                             <h4 style="margin: 0 0 4px 0; font-size: 16px;">Chapter ${index + 1}: ${chapter.title}</h4>
-                            <span class="chapter-date" style="color: #9ca3af; font-size: 12px;">Released: ${chapter.date || 'Recently'} &bull; ${pageCount} Pages</span>
+                            <span class="chapter-date" style="color: #9ca3af; font-size: 12px;">Released: ${chapter.date || 'Recently'} &bull; ${isNovel ? `${wordCount} words` : `${pageCount} Pages`}</span>
                         </div>
                         <span class="read-btn" style="color: #ff8906; font-weight: bold;">Read &rarr;</span>
                     `;

@@ -238,7 +238,7 @@
                 <div class="card-img" style="background-image: url('${imageSource}');"></div>
                 <div class="card-info">
                     <div class="card-meta">
-                        <span>Ch. ${chapterCount}</span>
+                        <span>${comic.type === 'novel' ? 'Novel' : 'Comic'} &bull; ${chapterCount} chapter${chapterCount === 1 ? '' : 's'}</span>
                         <span>${timeDisplay}</span>
                     </div>
                     <h3>${comic.title}</h3>

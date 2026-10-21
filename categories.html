@@ -148,7 +148,7 @@
 
         <section class="category-section">
             <h2 class="category-title">Comics</h2>
-            <div class="cards-grid">
+            <div class="cards-grid" id="communityComicsGrid">
                 <a href="bloodhaven.html" class="card">
                     <img src="img/HavenArk_DevilsBlood.jpg" alt="Haven Ark: Devil's Blood">
                     <div class="card-info">
@@ -168,7 +168,7 @@
 
         <section class="category-section">
             <h2 class="category-title">Web Novels</h2>
-            <div class="cards-grid">
+            <div class="cards-grid" id="communityNovelsGrid">
                 <a href="Forestconnect.html" class="card">
                     <img src="img/Untitled.png" alt="Forest Connect">
                     <div class="card-info">
@@ -206,6 +206,41 @@
         document.addEventListener('click', function () {
             searchContainer.classList.remove('active');
             navDropdown.classList.remove('active');
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const communityComics = JSON.parse(localStorage.getItem('webcomics_list')) || [];
+            const comicsGrid = document.getElementById('communityComicsGrid');
+            const novelsGrid = document.getElementById('communityNovelsGrid');
+
+            communityComics.forEach(function (comic) {
+                const isNovel = comic.type === 'novel';
+                const card = document.createElement('a');
+                const cover = document.createElement('img');
+                const cardInfo = document.createElement('div');
+                const title = document.createElement('h3');
+                const chapterCount = document.createElement('p');
+
+                card.href = 'comic-details.html';
+                card.className = 'card';
+                cover.src = comic.cover || comic.image || 'img/Untitled.png';
+                cover.alt = comic.title || (isNovel ? 'Community web novel' : 'Community comic');
+                cardInfo.className = 'card-info';
+                title.textContent = comic.title || (isNovel ? 'Untitled Web Novel' : 'Untitled Comic');
+
+                const chapters = Array.isArray(comic.chapters) ? comic.chapters.length : 0;
+                chapterCount.textContent = `${chapters} chapter${chapters === 1 ? '' : 's'}`;
+
+                cardInfo.append(title, chapterCount);
+                card.append(cover, cardInfo);
+                card.addEventListener('click', function () {
+                    localStorage.setItem('active_comic', JSON.stringify(comic));
+                });
+
+                (isNovel ? novelsGrid : comicsGrid).appendChild(card);
+            });
         });
     </script>
 </body>

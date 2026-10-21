@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publish Comic - WebComics</title>
+    <title>Publish Comic or Novel - WebComics</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style1-hero.css">
     <link rel="stylesheet" href="css/search.css">
@@ -54,31 +54,43 @@
     </header>
 
     <main class="section" style="max-width: 600px; margin: 40px auto; color: white;">
-        <h2>Publish a New Comic</h2>
-        <p style="color: #8c8f9c; margin-bottom: 20px;">Upload your artwork and details to display it on the trending page.</p>
+        <h2 id="publishHeading">Publish a New Comic</h2>
+        <p style="color: #8c8f9c; margin-bottom: 20px;">Create a comic with artwork or a web novel with written chapters. Add chapters from your account after publishing.</p>
 
         <form id="publishForm" style="display: flex; flex-direction: column; gap: 15px;">
             <div>
-                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Comic Title</label>
+                <label for="workType" style="display: block; margin-bottom: 5px; font-weight: 600;">What would you like to create?</label>
+                <select id="workType" style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
+                    <option value="comic">Web comic</option>
+                    <option value="novel">Web novel</option>
+                </select>
+            </div>
+            <div>
+                <label for="comicTitle" id="titleLabel" style="display: block; margin-bottom: 5px; font-weight: 600;">Comic Title</label>
                 <input type="text" id="comicTitle" placeholder="Enter comic name..." required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
             </div>
 
             <div>
-                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Author / Creator Name</label>
+                <label for="comicAuthor" style="display: block; margin-bottom: 5px; font-weight: 600;">Author / Creator Name</label>
                 <input type="text" id="comicAuthor" placeholder="Your name or username..." required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
             </div>
 
             <div>
-                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Synopsis / Description</label>
+                <label for="comicSynopsis" style="display: block; margin-bottom: 5px; font-weight: 600;">Synopsis / Description</label>
                 <textarea id="comicSynopsis" placeholder="What is your comic about?" required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px; min-height: 80px; resize: vertical;"></textarea>
             </div>
 
             <div>
-                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Cover Image</label>
+                <label for="comicGenre" style="display: block; margin-bottom: 5px; font-weight: 600;">Genre</label>
+                <input type="text" id="comicGenre" placeholder="e.g. Fantasy, Romance, Adventure" maxlength="100" style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
+            </div>
+
+            <div>
+                <label for="comicFile" style="display: block; margin-bottom: 5px; font-weight: 600;">Cover Image</label>
                 <input type="file" id="comicFile" accept="image/*" required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
             </div>
 
-            <button type="submit" class="btn primary" style="padding: 10px; cursor: pointer; border: none; font-weight: bold; border-radius: 6px;">Publish Comic</button>
+            <button type="submit" id="publishButton" class="btn primary" style="padding: 10px; cursor: pointer; border: none; font-weight: bold; border-radius: 6px;">Publish Comic</button>
         </form>
     </main>
 
@@ -114,25 +126,45 @@
 
         const publishForm = document.getElementById('publishForm');
         const comicTitleInput = document.getElementById('comicTitle');
+        const comicAuthorInput = document.getElementById('comicAuthor');
         const comicSynopsisInput = document.getElementById('comicSynopsis');
+        const comicGenreInput = document.getElementById('comicGenre');
         const comicFileInput = document.getElementById('comicFile');
+        const workTypeInput = document.getElementById('workType');
+
+        comicAuthorInput.value = loggedInUser?.username || loggedInUser?.name || '';
+        comicAuthorInput.readOnly = true;
+
+        workTypeInput.addEventListener('change', function () {
+            const isNovel = workTypeInput.value === 'novel';
+            document.getElementById('publishHeading').textContent = isNovel ? 'Publish a New Web Novel' : 'Publish a New Comic';
+            document.getElementById('titleLabel').textContent = isNovel ? 'Novel Title' : 'Comic Title';
+            comicTitleInput.placeholder = isNovel ? 'Enter novel title...' : 'Enter comic name...';
+            document.getElementById('publishButton').textContent = isNovel ? 'Publish Web Novel' : 'Publish Comic';
+        });
 
         publishForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const file = comicFileInput.files[0];
-            if (!file) return;
+            if (!file) {
+                alert('Please select a cover image.');
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = function(event) {
                 const base64Image = event.target.result;
+                const workType = workTypeInput.value;
 
                 const newComic = {
-                    id: 'comic_' + Date.now(), // Unique ID used for tracking and chapter management
+                    id: `${workType}_${Date.now()}`,
+                    type: workType,
                     title: comicTitleInput.value.trim(),
                     author: loggedInUser.username, // Automatically secured from login session
                     synopsis: comicSynopsisInput.value.trim(),
+                    genre: comicGenreInput.value.trim(),
                     cover: base64Image,
-                    chapters: [] // Starts completely empty—chapters are managed later in edit-comic.html
+                    chapters: []
                 };
 
                 // Save to webcomics_list so account.html and details pages can read it
@@ -140,7 +172,7 @@
                 allComics.unshift(newComic);
                 localStorage.setItem('webcomics_list', JSON.stringify(allComics));
 
-                alert('Comic published successfully!');
+                alert(`${workType === 'novel' ? 'Web novel' : 'Comic'} published successfully! Add chapters from your account.`);
                 window.location.href = 'account.html'; // Redirect to dashboard
             };
 

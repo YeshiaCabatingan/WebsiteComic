@@ -95,35 +95,62 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .avatar-change-btn,
         .avatar-remove-btn {
-            border: 0;
-            background: transparent;
-            color: #a9d8ff;
             font: inherit;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             font-weight: 700;
             cursor: pointer;
-            padding: 4px 6px;
+            min-height: 38px;
+            padding: 8px 13px;
+            border-radius: 10px;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .avatar-change-btn:hover,
-        .avatar-remove-btn:hover {
-            color: #ffffff;
-            text-decoration: underline;
+        .avatar-change-btn {
+            border: 1px solid rgba(113, 188, 255, 0.3);
+            background: rgba(0, 136, 255, 0.15);
+            color: #a9d8ff;
+        }
+
+        .avatar-change-btn:hover {
+            background: rgba(0, 136, 255, 0.28);
+            border-color: rgba(113, 188, 255, 0.55);
+            box-shadow: 0 6px 18px rgba(0, 136, 255, 0.14);
         }
 
         .avatar-remove-btn {
-            color: #ff9385;
+            border: 1px solid rgba(255, 147, 133, 0.22);
+            background: rgba(192, 57, 43, 0.1);
+            color: #ffaaa0;
+        }
+
+        .avatar-remove-btn:not([hidden]) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-remove-btn:hover {
+            background: rgba(192, 57, 43, 0.22);
+            border-color: rgba(255, 147, 133, 0.42);
         }
 
         .avatar-actions {
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .avatar-change-btn:focus-visible,
+        .avatar-remove-btn:focus-visible {
+            outline: 3px solid rgba(113, 188, 255, 0.8);
+            outline-offset: 3px;
         }
 
         .avatar-input {
@@ -550,7 +577,7 @@
                 </div>
 
                 <div class="profile-actions">
-                    <a href="publishcomic.html" class="btn primary">Publish Comic</a>
+                    <a href="publishcomic.html" class="btn primary">Publish Comic or Novel</a>
                     <button id="logoutBtn" class="btn secondary" type="button">Log Out</button>
                 </div>
             </div>
@@ -757,10 +784,10 @@
             if (!myComics.length) {
                 userComicsGrid.innerHTML = `
                     <div class="empty-state" style="grid-column: 1 / -1;">
-                        <h3>No comics published yet</h3>
-                        <p>Start by creating your first comic and share it with the community.</p>
+                        <h3>No works published yet</h3>
+                        <p>Start by creating your first comic or web novel and share it with the community.</p>
                         <div style="margin-top: 18px;">
-                            <a href="publishcomic.html" class="btn primary" style="text-decoration: none;">Publish Your First Comic</a>
+                            <a href="publishcomic.html" class="btn primary" style="text-decoration: none;">Publish Your First Work</a>
                         </div>
                     </div>
                 `;
@@ -779,7 +806,8 @@
                             <h3>${comic.title || 'Untitled Comic'}</h3>
                             <p>${synopsis}</p>
                             <div class="meta-row">
-                                <span>${chapterTotal} chapters</span>
+                                <span>${comic.type === 'novel' ? 'Web Novel' : 'Web Comic'}</span>
+                                <span>${chapterTotal} chapter${chapterTotal === 1 ? '' : 's'}</span>
                                 <span>${comic.status || 'Draft'}</span>
                             </div>
                             <div class="action-row">
@@ -798,8 +826,15 @@
                     const comicId = this.dataset.id;
 
                     if (action === 'read') {
+                        const selectedComic = allComics.find(comic => (comic.id || '') === comicId);
+                        if (!selectedComic) {
+                            alert('This comic could not be found. Please refresh your account page and try again.');
+                            return;
+                        }
+
                         localStorage.setItem('selected_comic_id', comicId);
-                        window.location.href = 'read.html';
+                        localStorage.setItem('active_comic', JSON.stringify(selectedComic));
+                        window.location.href = 'read.html?chapter=0';
                         return;
                     }
 

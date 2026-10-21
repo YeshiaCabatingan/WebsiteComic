@@ -172,10 +172,7 @@
         const commentsList = document.getElementById('commentsList');
         const commentCount = document.getElementById('commentCount');
 
-        // 2. Use the active comic from localStorage to create a unique storage key per comic
-        const activeComic = JSON.parse(localStorage.getItem('active_comic')) || {};
-        const comicIdentifier = activeComic.id || (activeComic.title ? activeComic.title.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'default_comic');
-        const storageKey = 'webcomics_series_' + comicIdentifier + '_comments';
+        const storageKey = 'webcomics_series_forest-connect_comments';
 
         function loadComments() {
             const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
