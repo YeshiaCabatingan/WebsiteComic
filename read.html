@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/search.css">
     <script src="js/profile-avatar.js" defer></script>
     <script src="js/search.js" defer></script>
+    <script src="js/guest-access.js" defer></script>
     <link rel="stylesheet" href="css/stylechapter.css">
     <link rel="stylesheet" href="css/comment.css">
     <style>
@@ -419,16 +420,17 @@
     <!-- Comment Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // 1. Pull Logged-in User Profile & Avatar Data
-            const savedAvatar = localStorage.getItem('user_avatar');
-            // Assuming you store the logged-in username or profile object, adjust keys if needed:
-            const currentUser = JSON.parse(localStorage.getItem('current_user_profile')) || { name: "admin" };
-            const username = localStorage.getItem('logged_in_username') || currentUser.name || "Admin User";
+            const activeComic = JSON.parse(localStorage.getItem('active_comic')) || {};
+            const currentUser = JSON.parse(localStorage.getItem('logged_in_user'))
+                || JSON.parse(localStorage.getItem('current_user_profile'))
+                || {};
+            const username = currentUser.username || currentUser.name || 'Reader';
+            const savedAvatar = currentUser.avatar || localStorage.getItem('user_avatar') || '';
 
-            // Update the comment box form avatar preview
             const formAvatarImg = document.getElementById('commentFormAvatarImg');
-            if (formAvatarImg && savedAvatar) {
-                formAvatarImg.src = savedAvatar;
+            if (formAvatarImg) {
+                formAvatarImg.src = savedAvatar || formAvatarImg.dataset.defaultAvatar;
+                formAvatarImg.alt = savedAvatar ? `${username}'s profile photo` : 'Default profile avatar';
             }
 
             const commentForm = document.getElementById('commentForm');
@@ -436,10 +438,10 @@
             const commentsList = document.getElementById('commentsList');
             const commentCount = document.getElementById('commentCount');
 
-            // Use a unique storage key per chapter based on URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const chapterIdx = urlParams.get('chapter') || '0';
-            const storageKey = 'webcomics_chapter_' + chapterIdx + '_comments';
+            const comicIdentity = activeComic.id || `${activeComic.author || ''}_${activeComic.title || ''}`;
+            const storageKey = `webcomics_comic_${encodeURIComponent(comicIdentity)}_chapter_${chapterIdx}_comments`;
 
             function loadComments() {
                 const savedComments = JSON.parse(localStorage.getItem(storageKey)) || [];
@@ -489,7 +491,7 @@
                 const newComment = {
                     author: username,
                     text: textVal,
-                    avatar: savedAvatar || '', // Attach their custom uploaded avatar snapshot to the comment
+                    avatar: savedAvatar,
                     time: 'Just now'
                 };
 

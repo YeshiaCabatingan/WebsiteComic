@@ -85,7 +85,7 @@
                         id: `community:${String(comic.id)}`,
                         comicId: String(comic.id),
                         title: comic.title || 'Untitled Comic',
-                        type: 'Community Comic',
+                        type: comic.type || 'comic',
                         kind: 'community'
                     };
                 }
@@ -192,13 +192,19 @@
     }
 
     function setupBookmarkList() {
-        const grid = document.getElementById('bookmarkGrid');
-        if (!grid) return;
+        const comicGrid = document.getElementById('comicBookmarkGrid');
+        const novelGrid = document.getElementById('novelBookmarkGrid');
+        if (!comicGrid || !novelGrid) return;
 
         const bookmarks = readBookmarks();
         const communityComics = getCommunityComics();
         const resolvedBookmarks = [];
-        grid.replaceChildren();
+        const bookmarkGrids = {
+            comic: comicGrid,
+            novel: novelGrid
+        };
+        comicGrid.replaceChildren();
+        novelGrid.replaceChildren();
 
         bookmarks.forEach(bookmark => {
             const comic = bookmark.kind === 'community'
@@ -207,6 +213,9 @@
             if (bookmark.kind === 'community' && !comic) return;
 
             resolvedBookmarks.push(bookmark);
+            const type = (comic && comic.type) || bookmark.type || '';
+            const category = String(type).toLowerCase().includes('novel') ? 'novel' : 'comic';
+            const grid = bookmarkGrids[category];
             const card = createBookmarkCard(bookmark, comic, function (event) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -223,11 +232,17 @@
             saveBookmarks(resolvedBookmarks);
         }
 
-        if (resolvedBookmarks.length === 0) {
+        if (comicGrid.childElementCount === 0) {
             const empty = document.createElement('p');
             empty.className = 'empty-message';
-            empty.textContent = 'No bookmarks yet. Open a comic and select “Bookmark” to save it here.';
-            grid.appendChild(empty);
+            empty.textContent = 'No comics bookmarked yet.';
+            comicGrid.appendChild(empty);
+        }
+        if (novelGrid.childElementCount === 0) {
+            const empty = document.createElement('p');
+            empty.className = 'empty-message';
+            empty.textContent = 'No web novels bookmarked yet.';
+            novelGrid.appendChild(empty);
         }
     }
 

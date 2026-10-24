@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/search.css">
     <script src="js/profile-avatar.js" defer></script>
     <script src="js/search.js" defer></script>
+    <script src="js/guest-access.js" defer></script>
     <style>
         body {
             background:
@@ -291,6 +292,51 @@
             gap: 20px;
         }
 
+        .work-group + .work-group {
+            margin-top: 30px;
+            padding-top: 26px;
+            border-top: 1px solid rgba(152, 177, 255, 0.12);
+        }
+
+        .work-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .work-group-header h3 {
+            margin: 0;
+            color: #fffffe;
+            font-size: 1.12rem;
+            letter-spacing: -0.02em;
+        }
+
+        .work-group-count {
+            display: inline-flex;
+            min-width: 26px;
+            height: 26px;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8px;
+            border: 1px solid rgba(113, 188, 255, 0.18);
+            border-radius: 999px;
+            background: rgba(0, 136, 255, 0.1);
+            color: #a9d8ff;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .work-group-empty {
+            grid-column: 1 / -1;
+            padding: 22px;
+            border: 1px dashed rgba(152, 177, 255, 0.16);
+            border-radius: 14px;
+            color: #aeb8d2;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
         .comic-card {
             background: #131927;
             border: 1px solid rgba(255, 255, 255, 0.09);
@@ -509,6 +555,256 @@
                 transition-duration: 0.01ms !important;
             }
         }
+
+        .account-shell {
+            width: min(1120px, calc(100% - 48px));
+            padding-top: 126px;
+        }
+
+        .page-intro {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .page-intro .eyebrow {
+            color: #ffb454;
+            margin-bottom: 8px;
+        }
+
+        .page-intro h1 {
+            color: #fffffe;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            line-height: 1.08;
+            letter-spacing: -0.045em;
+            margin: 0 0 8px;
+        }
+
+        .page-intro p {
+            color: #aeb8d2;
+            line-height: 1.6;
+            max-width: 560px;
+        }
+
+        .account-profile {
+            background:
+                radial-gradient(ellipse at 88% 0%, rgba(0, 136, 255, 0.2), transparent 38%),
+                linear-gradient(115deg, #202944 0%, #191b30 58%, #191626 100%);
+            border-color: rgba(152, 177, 255, 0.14);
+            border-radius: 24px;
+            padding: clamp(26px, 4vw, 40px);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.26);
+        }
+
+        .account-profile::after {
+            width: 320px;
+            height: 320px;
+            right: -120px;
+            top: -190px;
+            background: rgba(255, 137, 6, 0.1);
+        }
+
+        .profile-card {
+            align-items: flex-end;
+            gap: 24px;
+        }
+
+        .profile-identity {
+            gap: 22px;
+        }
+
+        .avatar-box {
+            flex-basis: 104px;
+            width: 104px;
+            height: 104px;
+            background: linear-gradient(145deg, #0088ff, #7252ff 58%, #ff8906);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), 0 0 0 7px rgba(255, 255, 255, 0.055);
+        }
+
+        .avatar-control {
+            gap: 14px;
+        }
+
+        .avatar-change-btn,
+        .avatar-remove-btn {
+            border-radius: 999px;
+            padding: 8px 14px;
+        }
+
+        .profile-card h1 {
+            letter-spacing: -0.035em;
+        }
+
+        .profile-card p {
+            color: #c2cbe0;
+        }
+
+        .profile-actions {
+            gap: 12px;
+        }
+
+        .btn {
+            border-radius: 999px;
+            padding: 12px 20px;
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #168fff, #5b63ff);
+        }
+
+        .stats-grid {
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, #1b2032, #171a29);
+            border-color: rgba(152, 177, 255, 0.1);
+            border-radius: 18px;
+            padding: 22px 24px;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            right: -38px;
+            bottom: -52px;
+            border-radius: 50%;
+            background: rgba(0, 136, 255, 0.12);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(113, 188, 255, 0.25);
+        }
+
+        .stat-card strong {
+            position: relative;
+            z-index: 1;
+            color: #f7f8ff;
+            letter-spacing: -0.04em;
+        }
+
+        .stat-card span {
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            font-size: 0.72rem;
+        }
+
+        .panel {
+            margin-top: 24px;
+            padding: clamp(22px, 3vw, 32px);
+            background: linear-gradient(145deg, rgba(24, 26, 43, 0.96), rgba(19, 21, 35, 0.96));
+            border-color: rgba(152, 177, 255, 0.1);
+            border-radius: 22px;
+        }
+
+        .panel-header {
+            margin-bottom: 22px;
+        }
+
+        .panel-header h2 {
+            letter-spacing: -0.035em;
+        }
+
+        .comic-grid {
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+            gap: 16px;
+        }
+
+        .comic-card {
+            background: #171b2a;
+            border-color: rgba(152, 177, 255, 0.11);
+            border-radius: 18px;
+        }
+
+        .comic-card:hover {
+            border-color: rgba(113, 188, 255, 0.38);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+        }
+
+        .card-img {
+            height: 205px;
+            flex-basis: 205px;
+            border-bottom-color: rgba(152, 177, 255, 0.1);
+        }
+
+        .card-info {
+            padding: 20px;
+            gap: 12px;
+        }
+
+        .meta-row {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .empty-state {
+            background: rgba(11, 15, 28, 0.38);
+            border-color: rgba(152, 177, 255, 0.2);
+        }
+
+        @media (max-width: 900px) {
+            .account-shell {
+                padding-top: 138px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .account-shell {
+                width: min(100% - 32px, 560px);
+                padding-top: 146px;
+            }
+
+            .page-intro {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .page-intro .btn {
+                width: 100%;
+            }
+
+            .profile-card {
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .account-shell {
+                width: calc(100% - 24px);
+                padding-top: 138px;
+            }
+
+            .page-intro h1 {
+                font-size: 2rem;
+            }
+
+            .account-profile {
+                padding: 22px 18px;
+            }
+
+            .avatar-box {
+                flex-basis: 76px;
+                width: 76px;
+                height: 76px;
+            }
+
+            .profile-identity {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
     </style>
 </head>
 
@@ -556,6 +852,14 @@
     </header>
 
     <main class="account-shell">
+        <section class="page-intro" aria-labelledby="dashboardTitle">
+            <div>
+                <span class="eyebrow">YOUR CREATOR SPACE</span>
+                <h1 id="dashboardTitle">Creator dashboard</h1>
+                <p>Manage your profile, keep an eye on your publishing activity, and pick up where your stories left off.</p>
+            </div>
+        </section>
+
         <section class="account-profile">
             <div class="profile-card">
                 <div class="profile-identity">
@@ -570,7 +874,7 @@
                         <input id="avatarInput" class="avatar-input" type="file" accept="image/*" aria-label="Choose profile photo">
                     </div>
                     <div>
-                        <span class="eyebrow">Profile</span>
+                        <span class="eyebrow">YOUR PROFILE</span>
                         <h1 id="accountName">Your Account</h1>
                         <p id="accountMeta">Loading profile...</p>
                     </div>
@@ -598,12 +902,28 @@
             </div>
         </section>
 
-        <section class="panel">
+        <section class="panel" aria-labelledby="worksHeading">
             <div class="panel-header">
-                <h2>My Comics</h2>
-                <a href="publishcomic.html" class="btn secondary" style="text-decoration: none;">+ New Comic</a>
+                <div>
+                    <h2 id="worksHeading">My Works</h2>
+                    <p style="color: #aeb8d2; margin: 6px 0 0; font-size: 0.9rem;">Your comics and web novels, organized by type.</p>
+                </div>
+                <a href="publishcomic.html" class="btn secondary" style="text-decoration: none;">+ New Work</a>
             </div>
-            <div id="userComicsGrid" class="comic-grid"></div>
+            <section class="work-group" aria-labelledby="comicWorksHeading">
+                <div class="work-group-header">
+                    <h3 id="comicWorksHeading">Web Comics</h3>
+                    <span id="comicWorksCount" class="work-group-count">0</span>
+                </div>
+                <div id="comicWorksGrid" class="comic-grid"></div>
+            </section>
+            <section class="work-group" aria-labelledby="novelWorksHeading">
+                <div class="work-group-header">
+                    <h3 id="novelWorksHeading">Web Novels</h3>
+                    <span id="novelWorksCount" class="work-group-count">0</span>
+                </div>
+                <div id="novelWorksGrid" class="comic-grid"></div>
+            </section>
         </section>
     </main>
 
@@ -628,11 +948,13 @@
             navDropdown.classList.remove('active');
         });
 
-        const user = JSON.parse(localStorage.getItem('logged_in_user')) || JSON.parse(localStorage.getItem('current_user_profile'));
+        const user = JSON.parse(localStorage.getItem('logged_in_user'))
+            || JSON.parse(localStorage.getItem('current_user_profile'))
+            || {};
 
-        if (!user) {
-            alert('Please log in to view your account.');
-            window.location.href = 'login.html';
+        if (!user.username && !user.name) {
+            alert('You need an account to view your profile. Sign up to continue.');
+            window.location.replace('register.html');
         }
 
         const safeUserName = user?.username || user?.name || 'Comic Creator';
@@ -775,29 +1097,27 @@
 
         const publishedCount = document.getElementById('publishedCount');
         const chapterCount = document.getElementById('chapterCount');
-        const userComicsGrid = document.getElementById('userComicsGrid');
+        const comicWorks = myComics.filter(comic => comic.type !== 'novel');
+        const novelWorks = myComics.filter(comic => comic.type === 'novel');
+        const comicWorksGrid = document.getElementById('comicWorksGrid');
+        const novelWorksGrid = document.getElementById('novelWorksGrid');
 
         publishedCount.textContent = String(myComics.length);
         chapterCount.textContent = String(myComics.reduce((sum, comic) => sum + (Array.isArray(comic.chapters) ? comic.chapters.length : 0), 0));
+        document.getElementById('comicWorksCount').textContent = String(comicWorks.length);
+        document.getElementById('novelWorksCount').textContent = String(novelWorks.length);
 
-        function renderComics() {
-            if (!myComics.length) {
-                userComicsGrid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1 / -1;">
-                        <h3>No works published yet</h3>
-                        <p>Start by creating your first comic or web novel and share it with the community.</p>
-                        <div style="margin-top: 18px;">
-                            <a href="publishcomic.html" class="btn primary" style="text-decoration: none;">Publish Your First Work</a>
-                        </div>
-                    </div>
-                `;
+        function renderWorkCards(works, grid, emptyMessage) {
+            if (!works.length) {
+                grid.innerHTML = `<p class="work-group-empty">${emptyMessage}</p>`;
                 return;
             }
 
-            userComicsGrid.innerHTML = myComics.map(comic => {
+            grid.innerHTML = works.map(comic => {
                 const chapterTotal = Array.isArray(comic.chapters) ? comic.chapters.length : 0;
                 const image = comic.cover || 'img/Untitled.png';
                 const synopsis = comic.synopsis || 'No synopsis available yet.';
+                const workTypeLabel = comic.type === 'novel' ? 'Web Novel' : 'Web Comic';
 
                 return `
                     <article class="comic-card">
@@ -806,7 +1126,7 @@
                             <h3>${comic.title || 'Untitled Comic'}</h3>
                             <p>${synopsis}</p>
                             <div class="meta-row">
-                                <span>${comic.type === 'novel' ? 'Web Novel' : 'Web Comic'}</span>
+                                <span>${workTypeLabel}</span>
                                 <span>${chapterTotal} chapter${chapterTotal === 1 ? '' : 's'}</span>
                                 <span>${comic.status || 'Draft'}</span>
                             </div>
@@ -819,6 +1139,11 @@
                     </article>
                 `;
             }).join('');
+        }
+
+        function renderComics() {
+            renderWorkCards(comicWorks, comicWorksGrid, 'No web comics yet. Publish a comic to see it here.');
+            renderWorkCards(novelWorks, novelWorksGrid, 'No web novels yet. Publish a novel to see it here.');
 
             document.querySelectorAll('[data-action]').forEach(button => {
                 button.addEventListener('click', function () {
@@ -828,7 +1153,7 @@
                     if (action === 'read') {
                         const selectedComic = allComics.find(comic => (comic.id || '') === comicId);
                         if (!selectedComic) {
-                            alert('This comic could not be found. Please refresh your account page and try again.');
+                            alert('This work could not be found. Please refresh your account page and try again.');
                             return;
                         }
 

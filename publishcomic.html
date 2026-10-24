@@ -10,12 +10,363 @@
     <link rel="stylesheet" href="css/search.css">
     <link rel="stylesheet" href="css/style2-about&collab.css">
     <script src="js/search.js" defer></script>
+    <script src="js/guest-access.js" defer></script>
+    <style>
+        body {
+            background:
+                radial-gradient(ellipse at 12% 20%, rgba(0, 136, 255, 0.1), transparent 34rem),
+                radial-gradient(ellipse at 90% 38%, rgba(174, 0, 255, 0.07), transparent 32rem),
+                #0f0e17;
+        }
+
+        .publish-page {
+            width: min(1080px, calc(100% - 48px));
+            margin: 0 auto;
+            padding: 132px 0 72px;
+        }
+
+        .publish-intro {
+            margin-bottom: 28px;
+        }
+
+        .publish-eyebrow {
+            display: inline-block;
+            margin-bottom: 9px;
+            color: #ffb454;
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .publish-intro h1 {
+            margin: 0 0 10px;
+            color: #fffffe;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            line-height: 1.1;
+            letter-spacing: -0.045em;
+        }
+
+        .publish-intro p {
+            max-width: 650px;
+            color: #aeb8d2;
+            line-height: 1.65;
+        }
+
+        .publish-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(250px, 310px);
+            align-items: start;
+            gap: 22px;
+        }
+
+        .publish-form,
+        .preview-panel {
+            border: 1px solid rgba(152, 177, 255, 0.12);
+            border-radius: 20px;
+            background: linear-gradient(145deg, rgba(25, 29, 47, 0.96), rgba(19, 21, 35, 0.98));
+            box-shadow: 0 22px 54px rgba(0, 0, 0, 0.22);
+        }
+
+        .publish-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: clamp(20px, 3vw, 30px);
+        }
+
+        .form-heading {
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .form-heading h2 {
+            margin: 0 0 5px;
+            border: 0;
+            padding: 0;
+            color: #fffffe;
+            font-size: 1.25rem;
+        }
+
+        .form-heading p,
+        .field-hint {
+            color: #9ea9c2;
+            font-size: 0.84rem;
+            line-height: 1.5;
+        }
+
+        .form-field {
+            min-width: 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e8ebf5;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .form-field input:not([type="file"]),
+        .form-field select,
+        .form-field textarea {
+            display: block;
+            width: 100%;
+            min-height: 46px;
+            border: 1px solid rgba(171, 185, 222, 0.17);
+            border-radius: 10px;
+            outline: none;
+            background: #111523;
+            color: #fffffe;
+            font: inherit;
+            font-size: 0.94rem;
+            padding: 11px 13px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-field textarea {
+            min-height: 132px;
+            resize: vertical;
+            line-height: 1.55;
+        }
+
+        .form-field input::placeholder,
+        .form-field textarea::placeholder {
+            color: #78839e;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            border-color: rgba(72, 157, 255, 0.8);
+            box-shadow: 0 0 0 3px rgba(0, 136, 255, 0.14);
+        }
+
+        .form-field input[readonly] {
+            color: #aeb8d2;
+            background: #171b2a;
+            cursor: default;
+        }
+
+        .cover-upload {
+            padding: 16px;
+            border: 1px dashed rgba(113, 188, 255, 0.34);
+            border-radius: 12px;
+            background: rgba(0, 136, 255, 0.045);
+        }
+
+        .cover-upload input[type="file"] {
+            width: 100%;
+            color: #c3cbe0;
+            font: inherit;
+            font-size: 0.84rem;
+        }
+
+        .cover-upload input[type="file"]::file-selector-button {
+            margin-right: 12px;
+            padding: 9px 13px;
+            border: 1px solid rgba(113, 188, 255, 0.35);
+            border-radius: 8px;
+            background: rgba(0, 136, 255, 0.15);
+            color: #c8e5ff;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .field-hint {
+            margin-top: 9px;
+        }
+
+        .publish-button {
+            min-height: 48px;
+            border: 0;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #168fff, #5b63ff);
+            color: white;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(0, 106, 255, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .publish-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(0, 106, 255, 0.28);
+        }
+
+        .publish-button:focus-visible {
+            outline: 3px solid rgba(113, 188, 255, 0.8);
+            outline-offset: 3px;
+        }
+
+        .preview-panel {
+            position: sticky;
+            top: 110px;
+            padding: 20px;
+        }
+
+        .preview-panel h2 {
+            margin: 0 0 5px;
+            border: 0;
+            padding: 0;
+            color: #fffffe;
+            font-size: 1.05rem;
+        }
+
+        .preview-panel > p {
+            margin-bottom: 18px;
+            color: #9ea9c2;
+            font-size: 0.83rem;
+            line-height: 1.5;
+        }
+
+        .cover-preview {
+            position: relative;
+            width: min(100%, 230px);
+            margin: 0 auto;
+            aspect-ratio: 2 / 3;
+            overflow: hidden;
+            border: 1px solid rgba(152, 177, 255, 0.18);
+            border-radius: 14px;
+            background:
+                radial-gradient(circle at 50% 38%, rgba(0, 136, 255, 0.2), transparent 38%),
+                linear-gradient(145deg, #202943, #151827 72%);
+            box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+        }
+
+        .cover-placeholder {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            justify-items: center;
+            gap: 12px;
+            padding: 18px;
+            color: #aeb8d2;
+            text-align: center;
+        }
+
+        .cover-placeholder[hidden] {
+            display: none;
+        }
+
+        .cover-placeholder span:first-child {
+            display: grid;
+            width: 52px;
+            height: 52px;
+            place-items: center;
+            border: 1px solid rgba(152, 177, 255, 0.2);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #79bdff;
+            font-size: 1.45rem;
+        }
+
+        .cover-placeholder span:last-child {
+            max-width: 150px;
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        .cover-preview img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cover-preview img[hidden] {
+            display: none;
+        }
+
+        .preview-details {
+            padding: 16px 3px 2px;
+        }
+
+        .preview-details h3 {
+            margin-bottom: 6px;
+            color: #fffffe;
+            font-size: 1.05rem;
+            overflow-wrap: anywhere;
+        }
+
+        .preview-details p {
+            color: #9ea9c2;
+            font-size: 0.84rem;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .preview-type {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 5px 10px;
+            border: 1px solid rgba(113, 188, 255, 0.2);
+            border-radius: 999px;
+            background: rgba(0, 136, 255, 0.1);
+            color: #9dd2ff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 760px) {
+            .publish-page {
+                width: min(100% - 32px, 600px);
+                padding-top: 150px;
+            }
+
+            .publish-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-panel {
+                position: static;
+                grid-row: 1;
+            }
+
+            .cover-preview {
+                width: min(180px, 100%);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .publish-page {
+                width: calc(100% - 24px);
+                padding-top: 142px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .publish-form {
+                gap: 17px;
+                padding: 19px 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .publish-button,
+            .form-field input,
+            .form-field select,
+            .form-field textarea {
+                transition-duration: 0.01ms;
+            }
+        }
+    </style>
 </head>
 
 <body id="home">
-
-   <body id="home">
-
     <header class="navbar">
         <a href="index.html" class="logo-link">
             <img src="img/image.png" alt="WebComics Logo" class="logo-img">
@@ -53,45 +404,77 @@
         </div>
     </header>
 
-    <main class="section" style="max-width: 600px; margin: 40px auto; color: white;">
-        <h2 id="publishHeading">Publish a New Comic</h2>
-        <p style="color: #8c8f9c; margin-bottom: 20px;">Create a comic with artwork or a web novel with written chapters. Add chapters from your account after publishing.</p>
+    <main class="publish-page">
+        <header class="publish-intro">
+            <span class="publish-eyebrow">CREATOR STUDIO</span>
+            <h1 id="publishHeading">Publish a New Comic</h1>
+            <p>Share your next story with the community. Add the details and cover now, then add chapters from your account after publishing.</p>
+        </header>
 
-        <form id="publishForm" style="display: flex; flex-direction: column; gap: 15px;">
-            <div>
-                <label for="workType" style="display: block; margin-bottom: 5px; font-weight: 600;">What would you like to create?</label>
-                <select id="workType" style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
-                    <option value="comic">Web comic</option>
-                    <option value="novel">Web novel</option>
-                </select>
-            </div>
-            <div>
-                <label for="comicTitle" id="titleLabel" style="display: block; margin-bottom: 5px; font-weight: 600;">Comic Title</label>
-                <input type="text" id="comicTitle" placeholder="Enter comic name..." required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
-            </div>
+        <div class="publish-layout">
+            <form id="publishForm" class="publish-form">
+                <div class="form-heading">
+                    <h2>Work details</h2>
+                    <p>Start with the essentials. You can add chapters after your work is published.</p>
+                </div>
 
-            <div>
-                <label for="comicAuthor" style="display: block; margin-bottom: 5px; font-weight: 600;">Author / Creator Name</label>
-                <input type="text" id="comicAuthor" placeholder="Your name or username..." required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
-            </div>
+                <div class="form-field">
+                    <label for="workType">What would you like to create?</label>
+                    <select id="workType">
+                        <option value="comic">Web comic</option>
+                        <option value="novel">Web novel</option>
+                    </select>
+                </div>
 
-            <div>
-                <label for="comicSynopsis" style="display: block; margin-bottom: 5px; font-weight: 600;">Synopsis / Description</label>
-                <textarea id="comicSynopsis" placeholder="What is your comic about?" required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px; min-height: 80px; resize: vertical;"></textarea>
-            </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="comicTitle" id="titleLabel">Comic Title</label>
+                        <input type="text" id="comicTitle" placeholder="Enter comic name..." required>
+                    </div>
+                    <div class="form-field">
+                        <label for="comicAuthor">Author / Creator Name</label>
+                        <input type="text" id="comicAuthor" placeholder="Your name or username..." required>
+                    </div>
+                </div>
 
-            <div>
-                <label for="comicGenre" style="display: block; margin-bottom: 5px; font-weight: 600;">Genre</label>
-                <input type="text" id="comicGenre" placeholder="e.g. Fantasy, Romance, Adventure" maxlength="100" style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
-            </div>
+                <div class="form-field">
+                    <label for="comicSynopsis">Synopsis / Description</label>
+                    <textarea id="comicSynopsis" placeholder="What is your comic about?" required></textarea>
+                </div>
 
-            <div>
-                <label for="comicFile" style="display: block; margin-bottom: 5px; font-weight: 600;">Cover Image</label>
-                <input type="file" id="comicFile" accept="image/*" required style="width: 100%; padding: 10px; background: #1a1b22; border: 1px solid #2d2e3b; color: white; border-radius: 6px;">
-            </div>
+                <div class="form-field">
+                    <label for="comicGenre">Genre <span style="color: #9ea9c2; font-weight: 500;">(optional)</span></label>
+                    <input type="text" id="comicGenre" placeholder="e.g. Fantasy, Romance, Adventure" maxlength="100">
+                </div>
 
-            <button type="submit" id="publishButton" class="btn primary" style="padding: 10px; cursor: pointer; border: none; font-weight: bold; border-radius: 6px;">Publish Comic</button>
-        </form>
+                <div class="form-field">
+                    <label for="comicFile">Cover Image</label>
+                    <div class="cover-upload">
+                        <input type="file" id="comicFile" accept="image/*" required>
+                        <p class="field-hint">Choose an image to see how your story will look as a thumbnail.</p>
+                    </div>
+                </div>
+
+                <button type="submit" id="publishButton" class="publish-button">Publish Comic</button>
+            </form>
+
+            <aside class="preview-panel" aria-labelledby="previewHeading">
+                <h2 id="previewHeading">Cover preview</h2>
+                <p>Your selected artwork will appear here in a thumbnail-friendly portrait crop.</p>
+                <div id="coverPreview" class="cover-preview" aria-label="Cover thumbnail preview">
+                    <div id="coverPlaceholder" class="cover-placeholder">
+                        <span aria-hidden="true">✦</span>
+                        <span>Your cover thumbnail will appear here</span>
+                    </div>
+                    <img id="coverPreviewImage" alt="Selected cover thumbnail preview" hidden>
+                </div>
+                <div class="preview-details">
+                    <h3 id="previewTitle">Untitled story</h3>
+                    <p id="previewAuthor">by your creator name</p>
+                    <span id="previewType" class="preview-type">Web comic</span>
+                </div>
+            </aside>
+        </div>
     </main>
 
      <script>
@@ -118,10 +501,11 @@
 
     <script>
         // Ensure user is logged in
-        const loggedInUser = JSON.parse(localStorage.getItem('logged_in_user'));
-        if (!loggedInUser) {
-            alert('Please log in to publish a comic.');
-            window.location.href = 'login.html';
+        const loggedInUser = JSON.parse(localStorage.getItem('logged_in_user'))
+            || JSON.parse(localStorage.getItem('current_user_profile'));
+        if (!loggedInUser || (!loggedInUser.username && !loggedInUser.name)) {
+            alert('You need an account to publish a story. Sign up to continue.');
+            window.location.replace('register.html');
         }
 
         const publishForm = document.getElementById('publishForm');
@@ -131,9 +515,63 @@
         const comicGenreInput = document.getElementById('comicGenre');
         const comicFileInput = document.getElementById('comicFile');
         const workTypeInput = document.getElementById('workType');
+        const coverPreviewImage = document.getElementById('coverPreviewImage');
+        const coverPlaceholder = document.getElementById('coverPlaceholder');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewAuthor = document.getElementById('previewAuthor');
+        const previewType = document.getElementById('previewType');
 
         comicAuthorInput.value = loggedInUser?.username || loggedInUser?.name || '';
         comicAuthorInput.readOnly = true;
+
+        function clearCoverPreview() {
+            coverPreviewImage.removeAttribute('src');
+            coverPreviewImage.hidden = true;
+            coverPlaceholder.hidden = false;
+        }
+
+        function updateDetailsPreview() {
+            previewTitle.textContent = comicTitleInput.value.trim() || 'Untitled story';
+            previewAuthor.textContent = `by ${comicAuthorInput.value.trim() || 'your creator name'}`;
+            previewType.textContent = workTypeInput.value === 'novel' ? 'Web novel' : 'Web comic';
+        }
+
+        comicTitleInput.addEventListener('input', updateDetailsPreview);
+        workTypeInput.addEventListener('change', updateDetailsPreview);
+        updateDetailsPreview();
+
+        comicFileInput.addEventListener('change', function () {
+            const file = comicFileInput.files[0];
+            if (!file) {
+                clearCoverPreview();
+                return;
+            }
+
+            if (!file.type.startsWith('image/')) {
+                alert('Please choose an image file for the cover.');
+                comicFileInput.value = '';
+                clearCoverPreview();
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onerror = function () {
+                clearCoverPreview();
+                alert('The selected cover image could not be read. Please try another file.');
+            };
+            reader.onload = function (event) {
+                if (typeof event.target.result !== 'string') {
+                    clearCoverPreview();
+                    alert('The selected cover image could not be previewed. Please try another file.');
+                    return;
+                }
+
+                coverPreviewImage.src = event.target.result;
+                coverPreviewImage.hidden = false;
+                coverPlaceholder.hidden = true;
+            };
+            reader.readAsDataURL(file);
+        });
 
         workTypeInput.addEventListener('change', function () {
             const isNovel = workTypeInput.value === 'novel';

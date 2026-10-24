@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Comic - WebComics</title>
+    <script src="js/guest-access.js" defer></script>
     <style>
         body {
             background-color: #12131c;
@@ -145,6 +146,14 @@
         let isNovel = false;
 
         document.addEventListener('DOMContentLoaded', function () {
+            const loggedInUser = JSON.parse(localStorage.getItem('logged_in_user'))
+                || JSON.parse(localStorage.getItem('current_user_profile'));
+            if (!loggedInUser) {
+                alert('You need an account to manage your stories. Sign up to continue.');
+                window.location.href = 'register.html';
+                return;
+            }
+
             if (!comic) {
                 alert('Work not found!');
                 window.location.href = 'account.html';
