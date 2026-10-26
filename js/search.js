@@ -245,6 +245,97 @@
 
     function initialize() {
         document.querySelectorAll('.search-container').forEach(initializeSearch);
+        initializeColorModes();
+    }
+
+    function initializeColorModes() {
+        if (!document.querySelector('.navbar') || document.querySelector('.color-mode-picker')) return;
+
+        const modes = [
+            { id: 'ember', label: 'Ember', color: '#ff8906' },
+            { id: 'ocean', label: 'Ocean', color: '#38bdf8' },
+            { id: 'forest', label: 'Forest', color: '#4ade80' },
+            { id: 'violet', label: 'Violet', color: '#c084fc' },
+            { id: 'rose', label: 'Rose', color: '#fb7185' }
+        ];
+        const picker = document.createElement('div');
+        const toggle = document.createElement('button');
+        const toggleMark = document.createElement('span');
+        const options = document.createElement('div');
+
+        picker.className = 'color-mode-picker';
+        toggle.className = 'color-mode-toggle';
+        toggle.type = 'button';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Choose a color mode');
+        options.className = 'color-mode-options';
+        options.id = 'colorModeOptions';
+        options.setAttribute('role', 'group');
+        options.setAttribute('aria-label', 'Color modes');
+        toggle.setAttribute('aria-controls', options.id);
+        toggleMark.className = 'color-mode-toggle-mark';
+        toggle.append(toggleMark, document.createTextNode('Colors'));
+
+        let selectedMode = 'ember';
+        try {
+            const savedMode = localStorage.getItem('webcomics_color_mode');
+            if (modes.some(mode => mode.id === savedMode)) selectedMode = savedMode;
+        } catch (error) {
+            console.error('Unable to load the saved color mode.', error);
+        }
+
+        function applyMode(mode) {
+            document.body.dataset.colorMode = mode.id;
+            selectedMode = mode.id;
+            options.querySelectorAll('.color-mode-option').forEach(option => {
+                option.setAttribute('aria-pressed', String(option.dataset.mode === selectedMode));
+            });
+            try {
+                localStorage.setItem('webcomics_color_mode', selectedMode);
+            } catch (error) {
+                console.error('Unable to save the selected color mode.', error);
+            }
+        }
+
+        modes.forEach(mode => {
+            const option = document.createElement('button');
+            const swatch = document.createElement('span');
+            option.className = 'color-mode-option';
+            option.type = 'button';
+            option.dataset.mode = mode.id;
+            option.setAttribute('aria-pressed', String(mode.id === selectedMode));
+            swatch.className = 'color-mode-swatch';
+            swatch.style.setProperty('--swatch-color', mode.color);
+            option.append(swatch, document.createTextNode(mode.label));
+            option.addEventListener('click', function () {
+                applyMode(mode);
+            });
+            options.appendChild(option);
+        });
+
+        applyMode(modes.find(mode => mode.id === selectedMode));
+        picker.append(toggle, options);
+        document.body.appendChild(picker);
+
+        toggle.addEventListener('click', function (event) {
+            event.stopPropagation();
+            const isOpen = picker.classList.toggle('active');
+            toggle.setAttribute('aria-expanded', String(isOpen));
+        });
+        picker.addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+        document.addEventListener('click', function () {
+            picker.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+        });
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                picker.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.focus();
+            }
+        });
     }
 
     if (document.readyState === 'loading') {
